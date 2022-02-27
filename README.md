@@ -45,7 +45,7 @@ USBD_MIDI_GetState(&hUsbDeviceFS) == MIDI_IDLE
 ```
 USBD_MIDI_SendReport(&hUsbDeviceFS, messagesBuffer, MIDI_EPIN_SIZE);
 ```
-## receive midi messages packet from host device:
+## Receive midi messages packet from host device:
 * Implement this weak function with something like this:
 ```
 void USBD_MIDI_DataInHandler(uint8_t *usb_rx_buffer, uint8_t usb_rx_buffer_length)
