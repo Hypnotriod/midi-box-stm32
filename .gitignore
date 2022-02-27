@@ -1,10 +1,10 @@
 MDK-ARM/DebugConfig/
 MDK-ARM/midi-box/
 MDK-ARM/midi-box.uvguix.*
-MDK-ARM/startup_stm32f407xx.lst
 MDK-ARM/JLinkLog.txt
 MDK-ARM/JLinkSettings.ini
 *.TMP
 *.dep
 *.bak
+*.lst
 .mxproject

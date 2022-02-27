@@ -71,8 +71,6 @@
 #define USBD_DEBUG_LEVEL     0
 /*---------- -----------*/
 #define USBD_SELF_POWERED     0
-/*---------- -----------*/
-#define HID_FS_BINTERVAL     0xA
 
 /****************************************/
 /* #define for FS and HS identification */
@@ -104,7 +102,7 @@
 /** Alias for delay. */
 #define USBD_Delay          HAL_Delay
 
-/* For footprint reasons and since only one allocation is handled in the HID class
+/* For footprint reasons and since only one allocation is handled in the MIDI class
    driver, the malloc/free is changed into a static allocation method */
 void *USBD_static_malloc(uint32_t size);
 void USBD_static_free(void *p);
