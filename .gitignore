@@ -3,6 +3,7 @@ MDK-ARM/midi-box/
 MDK-ARM/midi-box.uvguix.*
 MDK-ARM/JLinkLog.txt
 MDK-ARM/JLinkSettings.ini
+.vscode/
 *.TMP
 *.dep
 *.bak

@@ -24,7 +24,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "midi_router.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -91,7 +91,7 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
-
+  UART1_Begin();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -99,7 +99,8 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+    MIDI_ProcessUSBData();
+    MIDI_ProcessUARTData();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

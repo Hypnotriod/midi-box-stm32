@@ -567,16 +567,16 @@ __ALIGN_BEGIN static uint8_t USBD_MIDI_CfgDesc[USB_MIDI_CONFIG_DESC_SIZE]  __ALI
   MIDI_JACK_8,             /*BaAssocJackID(4): ID of the Embedded MIDI OUT Jack.*/
 #endif
 #if MIDI_IN_PORTS_NUM >= 5
-  MIDI_JACK_10,            /*BaAssocJackID(1): ID of the Embedded MIDI OUT Jack.*/
+  MIDI_JACK_10,            /*BaAssocJackID(5): ID of the Embedded MIDI OUT Jack.*/
 #endif
 #if MIDI_IN_PORTS_NUM >= 6
-  MIDI_JACK_12,            /*BaAssocJackID(2): ID of the Embedded MIDI OUT Jack.*/
+  MIDI_JACK_12,            /*BaAssocJackID(6): ID of the Embedded MIDI OUT Jack.*/
 #endif
 #if MIDI_IN_PORTS_NUM >= 7
-  MIDI_JACK_14,            /*BaAssocJackID(3): ID of the Embedded MIDI OUT Jack.*/
+  MIDI_JACK_14,            /*BaAssocJackID(7): ID of the Embedded MIDI OUT Jack.*/
 #endif
 #if MIDI_IN_PORTS_NUM >= 8
-  MIDI_JACK_16,            /*BaAssocJackID(4): ID of the Embedded MIDI OUT Jack.*/
+  MIDI_JACK_16,            /*BaAssocJackID(8): ID of the Embedded MIDI OUT Jack.*/
 #endif
 };
 

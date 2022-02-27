@@ -21,7 +21,24 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
+static uint8_t buffRxUart1[UART_BUFFER_SIZE] = {0};
+volatile static uint8_t buffRxUart1WriteIndex = 0;
+volatile static uint8_t buffRxUart1ReadIndex = 0;
 
+static uint8_t buffTxUart1[UART_BUFFER_SIZE] = {0};
+volatile static uint8_t buffTxUart1WriteIndex = 0;
+volatile static uint8_t buffTxUart1ReadIndex = 0;
+volatile static bool uart1TransmitInProgress = false;
+
+static uint8_t buffTxUart2[UART_BUFFER_SIZE] = {0};
+volatile static uint8_t buffTxUart2WriteIndex = 0;
+volatile static uint8_t buffTxUart2ReadIndex = 0;
+volatile static bool uart2TransmitInProgress = false;
+
+static uint8_t buffTxUart3[UART_BUFFER_SIZE] = {0};
+volatile static uint8_t buffTxUart3WriteIndex = 0;
+volatile static uint8_t buffTxUart3ReadIndex = 0;
+volatile static bool uart3TransmitInProgress = false;
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -41,7 +58,7 @@ void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 31250;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -70,7 +87,7 @@ void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
+  huart2.Init.BaudRate = 31250;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
@@ -99,7 +116,7 @@ void MX_USART3_UART_Init(void)
 
   /* USER CODE END USART3_Init 1 */
   huart3.Instance = USART3;
-  huart3.Init.BaudRate = 115200;
+  huart3.Init.BaudRate = 31250;
   huart3.Init.WordLength = UART_WORDLENGTH_8B;
   huart3.Init.StopBits = UART_STOPBITS_1;
   huart3.Init.Parity = UART_PARITY_NONE;
@@ -249,5 +266,97 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
+// ********************* USART 1 *********************
+
+void USART1_IRQHandler(void)
+{
+  if (USART1->SR & USART_SR_RXNE)
+  {
+    USART1->SR &= (~USART_SR_RXNE);
+    buffRxUart1[buffRxUart1WriteIndex++] = USART1->DR;
+  }
+
+  if (USART1->SR & USART_SR_TC)
+  {
+    USART1->SR &= (~USART_SR_TC);
+    if (buffTxUart1ReadIndex != buffTxUart1WriteIndex)
+      USART1->DR = buffTxUart1[buffTxUart1ReadIndex++];
+    else
+      uart1TransmitInProgress = false;
+  }
+}
+
+void UART1_Send(uint8_t data)
+{
+  buffTxUart1[buffTxUart1WriteIndex++] = data;
+  if (uart1TransmitInProgress == false)
+  {
+    uart1TransmitInProgress = true;
+    USART1->DR = buffTxUart1[buffTxUart1ReadIndex++];
+  }
+}
+
+void UART1_Begin(void)
+{
+  USART1->CR1 |= UART_IT_RXNE;
+}
+
+uint8_t UART1_Get(void)
+{
+  return buffRxUart1[buffRxUart1ReadIndex++];
+}
+
+bool UART1_Available(void)
+{
+  return (buffRxUart1ReadIndex != buffRxUart1WriteIndex);
+}
+
+// ********************* USART 2 *********************
+
+void USART2_IRQHandler(void)
+{
+  if (USART2->SR & USART_SR_TC)
+  {
+    USART2->SR &= (~USART_SR_TC);
+    if (buffTxUart2ReadIndex != buffTxUart2WriteIndex)
+      USART2->DR = buffTxUart2[buffTxUart2ReadIndex++];
+    else
+      uart2TransmitInProgress = false;
+  }
+}
+
+void UART2_Send(uint8_t data)
+{
+  buffTxUart2[buffTxUart2WriteIndex++] = data;
+  if (uart2TransmitInProgress == false)
+  {
+    uart2TransmitInProgress = true;
+    USART2->DR = buffTxUart2[buffTxUart2ReadIndex++];
+  }
+}
+
+// ********************* USART 3 *********************
+
+void USART3_IRQHandler(void)
+{
+  if (USART3->SR & USART_SR_TC)
+  {
+    USART3->SR &= (~USART_SR_TC);
+    if (buffTxUart3ReadIndex != buffTxUart3WriteIndex)
+      USART3->DR = buffTxUart3[buffTxUart3ReadIndex++];
+    else
+      uart3TransmitInProgress = false;
+  }
+}
+
+void UART3_Send(uint8_t data)
+{
+  buffTxUart3[buffTxUart3WriteIndex++] = data;
+  if (uart3TransmitInProgress == false)
+  {
+    uart3TransmitInProgress = true;
+    USART3->DR = buffTxUart3[buffTxUart3ReadIndex++];
+  }
+}
 
 /* USER CODE END 1 */

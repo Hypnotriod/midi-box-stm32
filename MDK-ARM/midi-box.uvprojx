@@ -385,9 +385,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>::CMSIS</GroupName>
-        </Group>
-        <Group>
           <GroupName>Application/User/Core</GroupName>
           <Files>
             <File>
@@ -414,6 +411,11 @@
               <FileName>stm32f1xx_hal_msp.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32f1xx_hal_msp.c</FilePath>
+            </File>
+            <File>
+              <FileName>midi_router.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\midi_router.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -566,6 +568,9 @@
               <FilePath>..\Middlewares\ST\STM32_USB_Device_Library\Class\MIDI\Src\usbd_midi.c</FilePath>
             </File>
           </Files>
+        </Group>
+        <Group>
+          <GroupName>::CMSIS</GroupName>
         </Group>
       </Groups>
     </Target>
