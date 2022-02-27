@@ -134,16 +134,16 @@ void MIDI_addUSBReport(uint8_t wire, uint8_t message, uint8_t param1, uint8_t pa
 void MIDI_ProcessUARTData(void)
 {
 	uint8_t messageByte;
-	uint8_t *buffUart;
-	uint8_t *buffUartIndex;
-	uint8_t *msgUart;
+	uint8_t *pBuff;
+	uint8_t *pBuffIndex;
+	uint8_t *pMessage;
 
 	if (UART1_Available())
 	{
 		messageByte = UART1_Get();
-		buffUart = buffUart1;
-		buffUartIndex = &buffUartIndex1;
-		msgUart = &msgUart1;
+		pBuff = buffUart1;
+		pBuffIndex = &buffUartIndex1;
+		pMessage = &msgUart1;
 	}
 	else
 	{
@@ -158,64 +158,64 @@ void MIDI_ProcessUARTData(void)
 	{
 		if ((messageByte & MIDI_MASK_STATUS_BYTE) == MIDI_MASK_STATUS_BYTE)
 		{
-			*buffUartIndex = 0; // First byte of MIDI message received
+			*pBuffIndex = 0; // First byte of MIDI message received
 		}
 
-		buffUart[*buffUartIndex] = messageByte;
+		pBuff[*pBuffIndex] = messageByte;
 
 		// Handle first MIDI byte
-		if (*buffUartIndex == 0)
+		if (*pBuffIndex == 0)
 		{
-			*msgUart = messageByte >> 4; // get midi message
+			*pMessage = messageByte >> 4; // get midi message
 
-			if (*msgUart == MIDI_MESSAGE_NOTE_OFF ||
-					*msgUart == MIDI_MESSAGE_NOTE_ON ||
-					*msgUart == MIDI_MESSAGE_KEY_PRESSURE ||
-					*msgUart == MIDI_MESSAGE_CONTROL_CHANGE ||
-					*msgUart == MIDI_MESSAGE_PROGRAM_CHANGE ||
-					*msgUart == MIDI_MESSAGE_CHANNEL_PRESSURE ||
-					*msgUart == MIDI_MESSAGE_PITCH_BAND_CHANGE)
+			if (*pMessage == MIDI_MESSAGE_NOTE_OFF ||
+					*pMessage == MIDI_MESSAGE_NOTE_ON ||
+					*pMessage == MIDI_MESSAGE_KEY_PRESSURE ||
+					*pMessage == MIDI_MESSAGE_CONTROL_CHANGE ||
+					*pMessage == MIDI_MESSAGE_PROGRAM_CHANGE ||
+					*pMessage == MIDI_MESSAGE_CHANNEL_PRESSURE ||
+					*pMessage == MIDI_MESSAGE_PITCH_BAND_CHANGE)
 			{
-				*buffUartIndex = 1;
+				*pBuffIndex = 1;
 			}
 			else if (messageByte == MIDI_MESSAGE_SONG_SELECT ||
 							 messageByte == MIDI_MESSAGE_SONG_POSITION ||
 							 messageByte == MIDI_MESSAGE_TIME_CODE_QTR_FRAME)
 			{
-				*msgUart = messageByte;
-				*buffUartIndex = 1;
+				*pMessage = messageByte;
+				*pBuffIndex = 1;
 			}
 		}
 		// Handle second MIDI byte
-		else if (*buffUartIndex == 1)
+		else if (*pBuffIndex == 1)
 		{
-			if (*msgUart == MIDI_MESSAGE_CHANNEL_PRESSURE ||
-					*msgUart == MIDI_MESSAGE_PROGRAM_CHANGE ||
-					*msgUart == MIDI_MESSAGE_TIME_CODE_QTR_FRAME ||
-					*msgUart == MIDI_MESSAGE_SONG_SELECT)
+			if (*pMessage == MIDI_MESSAGE_CHANNEL_PRESSURE ||
+					*pMessage == MIDI_MESSAGE_PROGRAM_CHANGE ||
+					*pMessage == MIDI_MESSAGE_TIME_CODE_QTR_FRAME ||
+					*pMessage == MIDI_MESSAGE_SONG_SELECT)
 			{
-				MIDI_addUSBReport(MIDI_UART1_WIRE, buffUart[0], buffUart[1], 0x00);
-				*buffUartIndex = 1;
+				MIDI_addUSBReport(MIDI_UART1_WIRE, pBuff[0], pBuff[1], 0x00);
+				*pBuffIndex = 1;
 			}
 			else
 			{
-				*buffUartIndex = 2;
+				*pBuffIndex = 2;
 			}
 		}
 		// Handle third MIDI byte
-		else if (*buffUartIndex == 2)
+		else if (*pBuffIndex == 2)
 		{
-			if (*msgUart == MIDI_MESSAGE_NOTE_ON ||
-					*msgUart == MIDI_MESSAGE_NOTE_OFF ||
-					*msgUart == MIDI_MESSAGE_KEY_PRESSURE ||
-					*msgUart == MIDI_MESSAGE_CONTROL_CHANGE ||
-					*msgUart == MIDI_MESSAGE_SONG_POSITION ||
-					*msgUart == MIDI_MESSAGE_PITCH_BAND_CHANGE)
+			if (*pMessage == MIDI_MESSAGE_NOTE_ON ||
+					*pMessage == MIDI_MESSAGE_NOTE_OFF ||
+					*pMessage == MIDI_MESSAGE_KEY_PRESSURE ||
+					*pMessage == MIDI_MESSAGE_CONTROL_CHANGE ||
+					*pMessage == MIDI_MESSAGE_SONG_POSITION ||
+					*pMessage == MIDI_MESSAGE_PITCH_BAND_CHANGE)
 			{
-				MIDI_addUSBReport(MIDI_UART1_WIRE, buffUart[0], buffUart[1], buffUart[2]);
+				MIDI_addUSBReport(MIDI_UART1_WIRE, pBuff[0], pBuff[1], pBuff[2]);
 			}
 
-			*buffUartIndex = 1;
+			*pBuffIndex = 1;
 		}
 	}
 

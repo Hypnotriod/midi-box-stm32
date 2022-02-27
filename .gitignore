@@ -8,4 +8,5 @@ MDK-ARM/JLinkSettings.ini
 *.dep
 *.bak
 *.lst
+*.*_tmp
 .mxproject
