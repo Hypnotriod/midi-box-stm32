@@ -1,9 +1,7 @@
 /**
   ******************************************************************************
   * @file    usbd_midi.c
-  * @author  MCD Application Team
-  * @version V2.0.0
-  * @date    18-February-2014
+  * @author  Illia Pikin; MCD Application Team
   * @brief   This file provides the MIDI core functions.
   *
   * @verbatim
@@ -11,7 +9,8 @@
   *          ===================================================================      
   *                                MIDI Class  Description
   *          =================================================================== 
-  *           This module manages the MIDI class V1.0 
+  *           This module manages the MIDI class V1.0 following the "Universal Serial Bus
+  *           Device Class Definition for MIDI Devices. Release 1.0 Nov 1, 1999".
   *      
   * @note     In HS mode and when the DMA is used, all variables and data structures
   *           dealing with the DMA during the transaction process should be 32-bit aligned.
@@ -22,6 +21,7 @@
   ******************************************************************************
   * @attention
   *
+  * <h2><center>&copy; COPYRIGHT 2022 Illia Pikin</center></h2>
   * <h2><center>&copy; COPYRIGHT 2014 STMicroelectronics</center></h2>
   *
   * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
@@ -35,10 +35,6 @@
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
-  *
-  ******************************************************************************
-  *
-  *                      Modified by Ilya Pikin 09.09.14
   *
   ******************************************************************************
   */ 

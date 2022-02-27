@@ -1,13 +1,12 @@
 /**
   ******************************************************************************
-  * @file    usbd_midi_core.h
+  * @file    usbd_midi.h
   * @author  MCD Application Team
-  * @version V2.0.0
-  * @date    18-February-2014
-  * @brief   header file for the usbd_MIDI_core.c file.
+  * @brief   header file for the usbd_midi.c file.
   ******************************************************************************
   * @attention
   *
+  * <h2><center>&copy; COPYRIGHT 2022 Illia Pikin</center></h2>
   * <h2><center>&copy; COPYRIGHT 2014 STMicroelectronics</center></h2>
   *
   * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
@@ -23,16 +22,12 @@
   * limitations under the License.
   *
   ******************************************************************************
-  *
-  *                      Modified by Ilya Pikin 09.09.14
-  *
-  ******************************************************************************
   */ 
 
 /* Includes ------------------------------------------------------------------*/
 
-#ifndef __USB_MIDI_CORE_H_
-#define __USB_MIDI_CORE_H_
+#ifndef __USB_MIDI_H
+#define __USB_MIDI_H
 
 #include  "usbd_ioreq.h"
 
@@ -194,7 +189,7 @@ uint8_t USBD_MIDI_GetDeviceState(USBD_HandleTypeDef  *pdev);
   * @}
   */ 
 
-#endif  // __USB_MIDI_CORE_H_
+#endif  // __USB_MIDI_H
 /**
   * @}
   */ 
