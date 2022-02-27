@@ -21,7 +21,7 @@ void USBD_MIDI_DataInHandler(uint8_t *usb_rx_buffer, uint8_t usb_rx_buffer_lengt
 {
 	while (usb_rx_buffer_length && *usb_rx_buffer != 0x00)
 	{
-		buffUsb[buffUsbNextIndex++] = *usb_rx_buffer;
+		buffUsb[buffUsbNextIndex++] = *usb_rx_buffer++;
 		buffUsb[buffUsbNextIndex++] = *usb_rx_buffer++;
 		buffUsb[buffUsbNextIndex++] = *usb_rx_buffer++;
 		buffUsb[buffUsbNextIndex++] = *usb_rx_buffer++;
@@ -88,8 +88,10 @@ void MIDI_ProcessUSBData(void)
 						 messageByte == MIDI_MESSAGE_SONG_SELECT)
 		{
 			if (*pLastMessageByte != messageByte)
-				pSend(messageByte),
-						*pLastMessageByte = messageByte;
+      {
+				pSend(messageByte);
+				*pLastMessageByte = messageByte;
+      }
 			pSend(param1);
 		}
 		else if (message == MIDI_MESSAGE_NOTE_ON ||
@@ -100,8 +102,10 @@ void MIDI_ProcessUSBData(void)
 						 message == MIDI_MESSAGE_PITCH_BAND_CHANGE)
 		{
 			if (*pLastMessageByte != messageByte)
-				pSend(messageByte),
-						*pLastMessageByte = messageByte;
+      {
+				pSend(messageByte);
+				*pLastMessageByte = messageByte;
+      }
 			pSend(param1);
 			pSend(param2);
 		}

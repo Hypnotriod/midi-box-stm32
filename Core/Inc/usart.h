@@ -47,6 +47,8 @@ void MX_USART3_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 void UART1_Begin(void);
+void UART2_Begin(void);
+void UART3_Begin(void);
 uint8_t UART1_Get(void);
 bool UART1_Available(void);
 void UART1_Send(uint8_t data);
