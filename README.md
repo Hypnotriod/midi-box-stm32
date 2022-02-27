@@ -5,7 +5,7 @@
 Contains `MIDI Device Class` Middleware implementation for `STM32 HAL USB` drivers, compatible with `STM32CubeMX` / `STM32CubeIDE` code generator.  
 MIDI class V1.0 following the "Universal Serial BusDevice Class Definition for MIDI Devices. Release 1.0 Nov 1, 1999"  
 
-## Configuring project using STM32CubeMX code generator
+## Configuring your project with STM32CubeMX code generator to use MIDI Device Class Middleware
 
 In STM32CubeMX / STM32CubeMX:
 * At `USB` -> enable `Device FS`
