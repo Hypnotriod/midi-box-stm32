@@ -51,7 +51,7 @@ USBD_MIDI_SendReport(&hUsbDeviceFS, messagesBuffer, MIDI_EPIN_SIZE);
 void USBD_MIDI_DataInHandler(uint8_t *usb_rx_buffer, uint8_t usb_rx_buffer_length)
 {
   while (usb_rx_buffer_length && *usb_rx_buffer != 0x00)
-	{
+  {
     wire = usb_rx_buffer[0] >> 4;
     message = usb_rx_buffer[1] >> 4;
     channel = usb_rx_buffer[1] & 0x0F;
