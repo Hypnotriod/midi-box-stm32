@@ -132,6 +132,7 @@ void MIDI_addUSBReport(uint8_t wire, uint8_t message, uint8_t param1, uint8_t pa
 void MIDI_ProcessUARTData(void)
 {
   uint8_t messageByte;
+  uint8_t wire;
   uint8_t *pBuff;
   uint8_t *pBuffIndex;
   uint8_t *pMessage;
@@ -139,32 +140,32 @@ void MIDI_ProcessUARTData(void)
   if (UART1_Available())
   {
     messageByte = UART1_Get();
+    wire = MIDI_UART1_WIRE;
     pBuff = buffUart1;
     pBuffIndex = &buffUartIndex1;
     pMessage = &msgUart1;
   }
   else
   {
-    return;
+    goto try_to_send_usb_midi_report;
   }
 
   if ((messageByte & MIDI_MASK_REAL_TIME_MESSAGE) == MIDI_MASK_REAL_TIME_MESSAGE)
-  { // Realtime messages
-    MIDI_addUSBReport(MIDI_UART1_WIRE, messageByte, 0x00, 0x00);
+  {
+    MIDI_addUSBReport(wire, messageByte, 0x00, 0x00);
   }
   else
   {
     if ((messageByte & MIDI_MASK_STATUS_BYTE) == MIDI_MASK_STATUS_BYTE)
     {
-      *pBuffIndex = 0; // First byte of MIDI message received
+      *pBuffIndex = 0;
     }
 
     pBuff[*pBuffIndex] = messageByte;
 
-    // Handle first MIDI byte
     if (*pBuffIndex == 0)
     {
-      *pMessage = messageByte >> 4; // get midi message
+      *pMessage = messageByte >> 4;
 
       if (*pMessage == MIDI_MESSAGE_NOTE_OFF ||
           *pMessage == MIDI_MESSAGE_NOTE_ON ||
@@ -184,7 +185,6 @@ void MIDI_ProcessUARTData(void)
         *pBuffIndex = 1;
       }
     }
-    // Handle second MIDI byte
     else if (*pBuffIndex == 1)
     {
       if (*pMessage == MIDI_MESSAGE_CHANNEL_PRESSURE ||
@@ -192,7 +192,7 @@ void MIDI_ProcessUARTData(void)
           *pMessage == MIDI_MESSAGE_TIME_CODE_QTR_FRAME ||
           *pMessage == MIDI_MESSAGE_SONG_SELECT)
       {
-        MIDI_addUSBReport(MIDI_UART1_WIRE, pBuff[0], pBuff[1], 0x00);
+        MIDI_addUSBReport(wire, pBuff[0], pBuff[1], 0x00);
         *pBuffIndex = 1;
       }
       else
@@ -200,7 +200,6 @@ void MIDI_ProcessUARTData(void)
         *pBuffIndex = 2;
       }
     }
-    // Handle third MIDI byte
     else if (*pBuffIndex == 2)
     {
       if (*pMessage == MIDI_MESSAGE_NOTE_ON ||
@@ -210,13 +209,14 @@ void MIDI_ProcessUARTData(void)
           *pMessage == MIDI_MESSAGE_SONG_POSITION ||
           *pMessage == MIDI_MESSAGE_PITCH_BAND_CHANGE)
       {
-        MIDI_addUSBReport(MIDI_UART1_WIRE, pBuff[0], pBuff[1], pBuff[2]);
+        MIDI_addUSBReport(wire, pBuff[0], pBuff[1], pBuff[2]);
       }
 
       *pBuffIndex = 1;
     }
   }
 
+  try_to_send_usb_midi_report:
   if (buffUsbReportNextIndex != 0 && USBD_MIDI_GetState(&hUsbDeviceFS) == MIDI_IDLE)
   {
     if (buffUsbReportNextIndex != MIDI_EPIN_SIZE)
