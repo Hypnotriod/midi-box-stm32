@@ -10,7 +10,7 @@ Right now up to 8 ports of each type supported, but only 12 ports in total.
 
 ## Configuring user project with STM32CubeMX code generator to use MIDI Device Class Middleware
 
-In STM32CubeMX / STM32CubeMX:
+In STM32CubeMX / STM32CubeIDE:
 * At `USB` -> enable `Device FS`
 * At `USB_DEVICE` -> choose `Human Interface Device Class (HID)`
 * Generate code
@@ -26,7 +26,7 @@ To use `MIDI Device Class` middleware, project requires few modifications in gen
 if (USBD_RegisterClass(&hUsbDeviceFS, &USBD_HID) != USBD_OK)  // replace this line
 if (USBD_RegisterClass(&hUsbDeviceFS, &USBD_MIDI) != USBD_OK) // with this line
 ```
-* Modify `USB_DEVICE/App/usb_device.c`:
+* Modify `USB_DEVICE/App/usbd_conf.c`:
 ```
 #include "usbd_hid.h"  // replace this line
 #include "usbd_midi.h" // with this line
