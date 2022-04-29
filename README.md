@@ -3,7 +3,7 @@
 `Midi Hub Device` implementation (with 1 input and 3 output ports) example based on STM32F103 dev board.  
   
 Contains `MIDI Device Class` Middleware implementation for `STM32 HAL USB` drivers, compatible with `STM32CubeMX`/`STM32CubeIDE` code generator.  
-MIDI class V1.0 following the "Universal Serial BusDevice Class Definition for MIDI Devices. Release 1.0 Nov 1, 1999"  
+MIDI class V1.0 follows the "Universal Serial Bus Device Class Definition for MIDI Devices. Release 1.0 Nov 1, 1999"  
   
 In file `usbd_midi.h` user can specify number of physical/virtual input type `MIDI_IN_PORTS_NUM` ports and output type `MIDI_OUT_PORTS_NUM` ports.  
 Right now up to 8 ports of each type supported, but only 12 ports in total.  
