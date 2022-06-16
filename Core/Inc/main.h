@@ -46,7 +46,8 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-
+#define MIDI_IN_PORTS_NUM              0x01
+#define MIDI_OUT_PORTS_NUM             0x03
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/

@@ -38,9 +38,6 @@
 /** @defgroup USBD_MIDI_Exported_Defines
   * @{
   */ 
-#define MIDI_IN_PORTS_NUM              0x01
-#define MIDI_OUT_PORTS_NUM             0x03
-  
 #define MIDI_EPIN_ADDR                 0x81
 #define MIDI_EPIN_SIZE                 0x40
 
