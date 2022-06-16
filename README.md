@@ -44,7 +44,7 @@ HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x81 , PCD_SNG_BUF, 0x100)
 ```
 
 ## Send midi messages packet to host device:
-* Enshure that MIDI driver status is IDLE by:
+* Ensure that MIDI driver status is IDLE by:
 ```
 USBD_MIDI_GetState(&hUsbDeviceFS) == MIDI_IDLE
 ```
