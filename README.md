@@ -36,6 +36,13 @@ HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x01 , PCD_SNG_BUF, 0xC0);
 HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x81 , PCD_SNG_BUF, 0x100); // leave this line as is
 /* USER CODE END EndPoint_Configuration_HID */
 ```
+* Modify `Core/Inc/main.h`:
+```
+/* USER CODE BEGIN EM */
+#define MIDI_IN_PORTS_NUM   0x01 // Specify input ports number of your device
+#define MIDI_OUT_PORTS_NUM  0x03 // Specify output ports number of your device
+```
+
 ## Send midi messages packet to host device:
 * Enshure that MIDI driver status is IDLE by:
 ```
