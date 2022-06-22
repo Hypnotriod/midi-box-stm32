@@ -847,7 +847,6 @@ static uint8_t  USBD_MIDI_DataOut (USBD_HandleTypeDef *pdev, uint8_t epnum)
   * @brief  USBD_MIDI_DataInHandler
   * @param  usb_rx_buffer: midi messages buffer
   * @param  usb_rx_buffer_length: midi messages buffer length
-  * @retval status
   */
 __weak extern void USBD_MIDI_DataInHandler(uint8_t * usb_rx_buffer, uint8_t usb_rx_buffer_length)
 {
