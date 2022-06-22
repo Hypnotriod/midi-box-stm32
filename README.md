@@ -17,7 +17,7 @@ In STM32CubeMX / STM32CubeIDE:
   
 To use `MIDI Device Class` middleware, project requires few modifications in generated code:
 * Copy `usbd_midi.c` and `usbd_midi.h` to `Middlewares/ST/STM32_USB_Device_Library/Class/MIDI/` `Src` and `Inc` folders respectively.
-* In your IDE add those folders to C/C++ compiler include path, and files to corresponding group.
+* In your IDE add those folders to C/C++ compiler include path (right click -> `Add/remove include paths...`), and files to corresponding group.
 * Modify `USB_DEVICE/App/usb_device.c`:
 ```
 #include "usbd_hid.h"  // replace this line
@@ -26,7 +26,7 @@ To use `MIDI Device Class` middleware, project requires few modifications in gen
 if (USBD_RegisterClass(&hUsbDeviceFS, &USBD_HID) != USBD_OK)  // replace this line
 if (USBD_RegisterClass(&hUsbDeviceFS, &USBD_MIDI) != USBD_OK) // with this line
 ```
-* Modify `USB_DEVICE/App/usbd_conf.c`:
+* Modify `USB_DEVICE/Target/usbd_conf.c`:
 ```
 #include "usbd_hid.h"  // replace this line
 #include "usbd_midi.h" // with this line
@@ -35,6 +35,9 @@ if (USBD_RegisterClass(&hUsbDeviceFS, &USBD_MIDI) != USBD_OK) // with this line
 HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x01 , PCD_SNG_BUF, 0xC0); // add this line
 HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x81 , PCD_SNG_BUF, 0x100); // leave this line as is
 /* USER CODE END EndPoint_Configuration_HID */
+...
+static uint32_t mem[(sizeof(USBD_HID_HandleTypeDef)/4)+1]; // replace this line
+static uint32_t mem[(sizeof(USBD_MIDI_HandleTypeDef)/4)+1]; // with this line
 ```
 * Modify `Core/Inc/main.h`:
 ```
