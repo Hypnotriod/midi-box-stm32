@@ -7,11 +7,11 @@
 extern USBD_HandleTypeDef hUsbDeviceFS;
 
 static uint8_t buffUsbReport[MIDI_EPIN_SIZE] = {0};
-volatile static uint8_t buffUsbReportNextIndex = 0;
+static uint8_t buffUsbReportNextIndex = 0;
 
-volatile static uint8_t buffUsb[MIDI_BUFFER_LENGTH] = {0};
+static uint8_t buffUsb[MIDI_BUFFER_LENGTH] = {0};
 volatile static uint8_t buffUsbNextIndex = 0;
-volatile static uint8_t buffUsbCurrIndex = 0;
+static uint8_t buffUsbCurrIndex = 0;
 
 static uint8_t buffUart1[3] = {0};
 static uint8_t buffUartIndex1 = 0;
