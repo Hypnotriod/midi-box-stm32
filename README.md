@@ -17,7 +17,7 @@ In STM32CubeMX / STM32CubeIDE:
   
 To use `MIDI Device Class` middleware, project requires few modifications in generated code:
 * Copy `usbd_midi.c` and `usbd_midi.h` to `Middlewares/ST/STM32_USB_Device_Library/Class/MIDI/` `Src` and `Inc` folders respectively.
-* In your IDE add those folders to C/C++ compiler include path (right click -> `Add/remove include paths...`), and files to corresponding group.
+* In your IDE add those folders to C/C++ compiler include path, and files to corresponding group.
 * Modify `USB_DEVICE/App/usb_device.c`:
 ```
 #include "usbd_hid.h"  // replace this line
