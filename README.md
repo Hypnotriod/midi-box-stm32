@@ -52,7 +52,7 @@ static uint32_t mem[(sizeof(USBD_MIDI_HandleTypeDef)/4)+1]; // with this line
 ```
 Please refer to `USB-MIDI Event Packets` in [midi10.pdf](https://github.com/Hypnotriod/midi-box-stm32/blob/master/doc/midi10.pdf) for more info.  
 ## Send midi event packets report to host device:
-* The size of `reportBuffer` in should not exceed `MIDI_EPIN_SIZE` (64) bytes, and consist of a maximum of 16 event packets.
+* The size of `reportBuffer` should not exceed `MIDI_EPIN_SIZE` (64) bytes, and consist of a maximum of 16 event packets.
 * Ensure that MIDI driver status is IDLE before each transfer initiation by:
 ```
 USBD_MIDI_GetState(&hUsbDeviceFS) == MIDI_IDLE
