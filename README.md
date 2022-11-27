@@ -45,24 +45,31 @@ static uint32_t mem[(sizeof(USBD_MIDI_HandleTypeDef)/4)+1]; // with this line
 #define MIDI_IN_PORTS_NUM   0x01 // Specify input ports number of your device
 #define MIDI_OUT_PORTS_NUM  0x03 // Specify output ports number of your device
 ```
-
-## Send midi messages packet to host device:
-* Ensure that MIDI driver status is IDLE by:
+## Midi event packet structure:
+```
+|  4 bits  |  4 bits  |  4 bits  |  4 bits  |  8 bits  |  8 bits  |
+|   Cable  |   Code   |  Message |  Channel |  Byte 1  |  Byte 2  |
+```
+Please refer to `USB-MIDI Event Packets` in [midi10.pdf](https://github.com/Hypnotriod/midi-box-stm32/blob/master/doc/midi10.pdf) for more info.  
+## Send midi event packets report to host device:
+* The size of `reportBuffer` in should not exceed `MIDI_EPIN_SIZE` (64) bytes, and consist of a maximum of 16 event packets.
+* Ensure that MIDI driver status is IDLE before each transfer initiation by:
 ```
 USBD_MIDI_GetState(&hUsbDeviceFS) == MIDI_IDLE
 ```
-* Send midi messages packet with:
+* Send midi event packets with:
 ```
-USBD_MIDI_SendReport(&hUsbDeviceFS, messagesBuffer, MIDI_EPIN_SIZE);
+USBD_MIDI_SendReport(&hUsbDeviceFS, reportBuffer, eventPacketsNumber * 4);
 ```
-## Receive midi messages packet from host device:
+## Receive midi event packets from host device:
 * Implement this weak function with something like this:
 ```
 void USBD_MIDI_DataInHandler(uint8_t *usb_rx_buffer, uint8_t usb_rx_buffer_length)
 {
   while (usb_rx_buffer_length && *usb_rx_buffer != 0x00)
   {
-    wire = usb_rx_buffer[0] >> 4;
+    cable = usb_rx_buffer[0] >> 4;
+    code = usb_rx_buffer[0] & 0x0F; // is equal to message and has no use
     message = usb_rx_buffer[1] >> 4;
     channel = usb_rx_buffer[1] & 0x0F;
     messageByte1 = usb_rx_buffer[2];
