@@ -6,7 +6,7 @@ Contains `MIDI Device Class` Middleware implementation for `STM32 HAL USB` drive
 MIDI class V1.0 follows the "Universal Serial Bus Device Class Definition for MIDI Devices. Release 1.0 Nov 1, 1999"  
   
 In file `usbd_midi.h` user can specify number of physical/virtual input type `MIDI_IN_PORTS_NUM` ports and output type `MIDI_OUT_PORTS_NUM` ports.  
-The `port` means Embedded MIDI Jack associated with the endpoint that is transferring the data. Which is related to usb-midi `cable` number.  
+The `port` means `cable` number or MIDI Jack associated with the endpoint that is transferring the data.  
 Right now up to 8 ports of each type supported, but only 12 ports in total.  
 
 ## Configuring user project with STM32CubeMX code generator to use MIDI Device Class Middleware
