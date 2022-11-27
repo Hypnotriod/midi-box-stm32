@@ -5,12 +5,12 @@
 #include "stm32f1xx_hal.h"
 #include "stdbool.h"
 
-#define MIDI_UART1_WIRE   0x00
-#define MIDI_WIRES_NUMBER 3
+#define MIDI_UART1_CABLE   0x00
+#define MIDI_CABLES_NUMBER 3
 
 #define MIDI_BUFFER_LENGTH           256
 #define MIDI_MAX_CHANNELS_NUM        16
-#define MIDI_MAX_WIRES_NUM           16
+#define MIDI_MAX_CABLES_NUM          16
 #define MIDI_MAX_ADDITIONAL_VELOCITY 127
 #define MIDI_MAX_NOTE_SHIFT          24
 #define MIDI_MIN_NOTE_SHIFT         -24
@@ -54,6 +54,6 @@
 
 void MIDI_ProcessUSBData(void);
 void MIDI_ProcessUARTData(void);
-void MIDI_addUSBReport(uint8_t wire, uint8_t message, uint8_t param1, uint8_t param2);
+void MIDI_addToUSBReport(uint8_t cable, uint8_t message, uint8_t param1, uint8_t param2);
 
 #endif

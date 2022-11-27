@@ -760,7 +760,8 @@ uint8_t USBD_MIDI_GetState(USBD_HandleTypeDef  *pdev)
   * @brief  USBD_MIDI_SendReport 
   *         Send MIDI Report
   * @param  pdev: device instance
-  * @param  buff: pointer to report
+  * @param  report: pointer to report
+  * @param  len: size of report
   * @retval status
   */
 uint8_t USBD_MIDI_SendReport     (USBD_HandleTypeDef  *pdev, 

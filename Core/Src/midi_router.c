@@ -37,9 +37,9 @@ bool MIDI_HasUSBData(void)
 
 void MIDI_ProcessUSBData(void)
 {
-  static uint8_t lastMessagesBytePerWire[MIDI_WIRES_NUMBER] = {0};
+  static uint8_t lastMessagesBytePerCable[MIDI_CABLES_NUMBER] = {0};
   uint8_t *pLastMessageByte;
-  uint8_t wire;
+  uint8_t cable;
   uint8_t messageByte;
   uint8_t message;
   uint8_t param1;
@@ -49,22 +49,22 @@ void MIDI_ProcessUSBData(void)
   if (buffUsbCurrIndex == buffUsbNextIndex)
     return;
 
-  wire = (buffUsb[buffUsbCurrIndex] >> 4);
+  cable = (buffUsb[buffUsbCurrIndex] >> 4);
   messageByte = buffUsb[buffUsbCurrIndex + 1];
 
-  if (wire == 0)
+  if (cable == 0)
   {
-    pLastMessageByte = &lastMessagesBytePerWire[0];
+    pLastMessageByte = &lastMessagesBytePerCable[0];
     pSend = &UART1_Send;
   }
-  else if (wire == 1)
+  else if (cable == 1)
   {
-    pLastMessageByte = &lastMessagesBytePerWire[1];
+    pLastMessageByte = &lastMessagesBytePerCable[1];
     pSend = &UART2_Send;
   }
-  else if (wire == 2)
+  else if (cable == 2)
   {
-    pLastMessageByte = &lastMessagesBytePerWire[2];
+    pLastMessageByte = &lastMessagesBytePerCable[2];
     pSend = &UART3_Send;
   }
   else
@@ -114,9 +114,9 @@ void MIDI_ProcessUSBData(void)
   buffUsbCurrIndex += 4;
 }
 
-void MIDI_addUSBReport(uint8_t wire, uint8_t message, uint8_t param1, uint8_t param2)
+void MIDI_addToUSBReport(uint8_t cable, uint8_t message, uint8_t param1, uint8_t param2)
 {
-  buffUsbReport[buffUsbReportNextIndex++] = (wire << 4) | (message >> 4);
+  buffUsbReport[buffUsbReportNextIndex++] = (cable << 4) | (message >> 4);
   buffUsbReport[buffUsbReportNextIndex++] = (message);
   buffUsbReport[buffUsbReportNextIndex++] = (param1);
   buffUsbReport[buffUsbReportNextIndex++] = (param2);
@@ -132,7 +132,7 @@ void MIDI_addUSBReport(uint8_t wire, uint8_t message, uint8_t param1, uint8_t pa
 void MIDI_ProcessUARTData(void)
 {
   uint8_t messageByte;
-  uint8_t wire;
+  uint8_t cable;
   uint8_t *pBuff;
   uint8_t *pBuffIndex;
   uint8_t *pMessage;
@@ -140,7 +140,7 @@ void MIDI_ProcessUARTData(void)
   if (UART1_Available())
   {
     messageByte = UART1_Get();
-    wire = MIDI_UART1_WIRE;
+    cable = MIDI_UART1_CABLE;
     pBuff = buffUart1;
     pBuffIndex = &buffUartIndex1;
     pMessage = &msgUart1;
@@ -152,7 +152,7 @@ void MIDI_ProcessUARTData(void)
 
   if ((messageByte & MIDI_MASK_REAL_TIME_MESSAGE) == MIDI_MASK_REAL_TIME_MESSAGE)
   {
-    MIDI_addUSBReport(wire, messageByte, 0x00, 0x00);
+    MIDI_addToUSBReport(cable, messageByte, 0x00, 0x00);
   }
   else
   {
@@ -192,7 +192,7 @@ void MIDI_ProcessUARTData(void)
           *pMessage == MIDI_MESSAGE_TIME_CODE_QTR_FRAME ||
           *pMessage == MIDI_MESSAGE_SONG_SELECT)
       {
-        MIDI_addUSBReport(wire, pBuff[0], pBuff[1], 0x00);
+        MIDI_addToUSBReport(cable, pBuff[0], pBuff[1], 0x00);
         *pBuffIndex = 1;
       }
       else
@@ -209,7 +209,7 @@ void MIDI_ProcessUARTData(void)
           *pMessage == MIDI_MESSAGE_SONG_POSITION ||
           *pMessage == MIDI_MESSAGE_PITCH_BAND_CHANGE)
       {
-        MIDI_addUSBReport(wire, pBuff[0], pBuff[1], pBuff[2]);
+        MIDI_addToUSBReport(cable, pBuff[0], pBuff[1], pBuff[2]);
       }
 
       *pBuffIndex = 1;
