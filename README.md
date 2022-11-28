@@ -14,6 +14,7 @@ Right now up to 8 ports of each type supported, but only 12 ports in total.
 In STM32CubeMX / STM32CubeIDE:
 * At `USB` -> enable `Device FS`
 * At `USB_DEVICE` -> choose `Human Interface Device Class (HID)`
+* (Optionally) At `USB_DEVICE` -> `Device Descriptor` -> update device descriptor information with your device info
 * Generate code
   
 To use `MIDI Device Class` middleware, project requires few modifications in generated code:
