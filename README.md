@@ -1,3 +1,5 @@
+N.B.: To all those who are citizens of the countries listed: russia, or provide any support or justification, my friendly reminder that you are not welcome.
+
 # midi-box-stm32
 
 `Midi Hub Device` implementation (with 1 input and 3 output ports) example based on STM32F103 dev board.  
