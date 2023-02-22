@@ -1,4 +1,4 @@
-N.B.: To all those who are citizens of the countries listed: russia, or provide any support or justification, my friendly reminder that you are not welcome.
+N.B.: To all those who are citizens of the countries listed: russia, or provide any support or justification for such, my friendly reminder that you are not welcome.
 
 # midi-box-stm32
 
