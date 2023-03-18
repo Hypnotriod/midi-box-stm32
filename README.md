@@ -49,7 +49,8 @@ static uint32_t mem[(sizeof(USBD_MIDI_HandleTypeDef)/4)+1]; // with this line
 #define MIDI_IN_PORTS_NUM   0x01 // Specify input ports number of your device
 #define MIDI_OUT_PORTS_NUM  0x01 // Specify output ports number of your device
 ```
-Alternatively for old ST libraries you may put `MIDI_IN_PORTS_NUM` and `MIDI_OUT_PORTS_NUM` defines into `USB_DEVICE/App/usbd_desc.h` file below `USER CODE BEGIN EXPORTED_DEFINES`
+In some versions of the ST libraries you may face a `MIDI_IN_PORTS_NUM macro is undeclared` error. In this case you can add `MIDI_IN_PORTS_NUM` and `MIDI_OUT_PORTS_NUM` definitions to the `USB_DEVICE/App/usbd_desc.h` file in the `BEGIN USER CODE EXPORTED_DEFINES` section.
+
 ## Midi event packet structure:
 ```
 |  4 bits  |  4 bits  |  4 bits  |  4 bits  |  8 bits  |  8 bits  |
