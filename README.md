@@ -35,7 +35,7 @@ if (USBD_RegisterClass(&hUsbDeviceFS, &USBD_MIDI) != USBD_OK) // with this line
 #include "usbd_hid.h"  // replace this line
 #include "usbd_midi.h" // with this line
 ...
-/* USER CODE BEGIN EndPoint_Configuration_HID */ // You may replace HID with MIDI for more convenience, but code generator will not keep it on next code generate
+/* USER CODE BEGIN EndPoint_Configuration_HID */ // this section may be absent if your device has no PMA, so no action required
 HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x01 , PCD_SNG_BUF, 0xC0); // add this line
 HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x81 , PCD_SNG_BUF, 0x100); // leave this line as is
 /* USER CODE END EndPoint_Configuration_HID */
@@ -49,6 +49,7 @@ static uint32_t mem[(sizeof(USBD_MIDI_HandleTypeDef)/4)+1]; // with this line
 #define MIDI_IN_PORTS_NUM   0x01 // Specify input ports number of your device
 #define MIDI_OUT_PORTS_NUM  0x01 // Specify output ports number of your device
 ```
+Alternatively for old ST libraries you may put `MIDI_IN_PORTS_NUM` and `MIDI_OUT_PORTS_NUM` defines into `USB_DEVICE/App/usbd_desc.h` file below `USER CODE BEGIN EXPORTED_DEFINES`
 ## Midi event packet structure:
 ```
 |  4 bits  |  4 bits  |  4 bits  |  4 bits  |  8 bits  |  8 bits  |
