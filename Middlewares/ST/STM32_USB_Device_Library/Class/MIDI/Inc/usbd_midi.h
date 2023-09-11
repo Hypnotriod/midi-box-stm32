@@ -69,61 +69,29 @@
 #define MIDI_JACK_7    0x07
 #define MIDI_JACK_8    0x08
 #define MIDI_JACK_9    0x09
-#define MIDI_JACK_10    0x0a
-#define MIDI_JACK_11    0x0b
-#define MIDI_JACK_12    0x0c
-#define MIDI_JACK_13    0x0d
-#define MIDI_JACK_14    0x0e
-#define MIDI_JACK_15    0x0f
-#define MIDI_JACK_16    0x10
-#define MIDI_JACK_17    0x11
-#define MIDI_JACK_18    0x12
-#define MIDI_JACK_19    0x13
-#define MIDI_JACK_20    0x14
-#define MIDI_JACK_21    0x15
-#define MIDI_JACK_22    0x16
-#define MIDI_JACK_23    0x17
-#define MIDI_JACK_24    0x18
-#define MIDI_JACK_25    0x19
-#define MIDI_JACK_26    0x1a
-#define MIDI_JACK_27    0x1b
-#define MIDI_JACK_28    0x1c
-#define MIDI_JACK_29    0x1d
-#define MIDI_JACK_30    0x1e
-#define MIDI_JACK_31    0x1f
-#define MIDI_JACK_32    0x20
-#define MIDI_JACK_33    0x21
-#define MIDI_JACK_34    0x22
-#define MIDI_JACK_35    0x23
-#define MIDI_JACK_36    0x24
-#define MIDI_JACK_37    0x25
-#define MIDI_JACK_38    0x26
-#define MIDI_JACK_39    0x27
-#define MIDI_JACK_40    0x28
-#define MIDI_JACK_41    0x29
-#define MIDI_JACK_42    0x2a
-#define MIDI_JACK_43    0x2b
-#define MIDI_JACK_44    0x2c
-#define MIDI_JACK_45    0x2d
-#define MIDI_JACK_46    0x2e
-#define MIDI_JACK_47    0x2f
-#define MIDI_JACK_48    0x30
-#define MIDI_JACK_49    0x31
-#define MIDI_JACK_50    0x32
-#define MIDI_JACK_51    0x33
-#define MIDI_JACK_52    0x34
-#define MIDI_JACK_53    0x35
-#define MIDI_JACK_54    0x36
-#define MIDI_JACK_55    0x37
-#define MIDI_JACK_56    0x38
-#define MIDI_JACK_57    0x39
-#define MIDI_JACK_58    0x3a
-#define MIDI_JACK_59    0x3b
-#define MIDI_JACK_60    0x3c
-#define MIDI_JACK_61    0x3d
-#define MIDI_JACK_62    0x3e
-#define MIDI_JACK_63    0x3f
-#define MIDI_JACK_64    0x40
+#define MIDI_JACK_10   0x0a
+#define MIDI_JACK_11   0x0b
+#define MIDI_JACK_12   0x0c
+#define MIDI_JACK_13   0x0d
+#define MIDI_JACK_14   0x0e
+#define MIDI_JACK_15   0x0f
+#define MIDI_JACK_16   0x10
+#define MIDI_JACK_17   (MIDI_IN_PORTS_NUM * 2 + 0x01)
+#define MIDI_JACK_18   (MIDI_IN_PORTS_NUM * 2 + 0x02)
+#define MIDI_JACK_19   (MIDI_IN_PORTS_NUM * 2 + 0x03)
+#define MIDI_JACK_20   (MIDI_IN_PORTS_NUM * 2 + 0x04)
+#define MIDI_JACK_21   (MIDI_IN_PORTS_NUM * 2 + 0x05)
+#define MIDI_JACK_22   (MIDI_IN_PORTS_NUM * 2 + 0x06)
+#define MIDI_JACK_23   (MIDI_IN_PORTS_NUM * 2 + 0x07)
+#define MIDI_JACK_24   (MIDI_IN_PORTS_NUM * 2 + 0x08)
+#define MIDI_JACK_25   (MIDI_IN_PORTS_NUM * 2 + 0x09)
+#define MIDI_JACK_26   (MIDI_IN_PORTS_NUM * 2 + 0x0a)
+#define MIDI_JACK_27   (MIDI_IN_PORTS_NUM * 2 + 0x0b)
+#define MIDI_JACK_28   (MIDI_IN_PORTS_NUM * 2 + 0x0c)
+#define MIDI_JACK_29   (MIDI_IN_PORTS_NUM * 2 + 0x0d)
+#define MIDI_JACK_30   (MIDI_IN_PORTS_NUM * 2 + 0x0e)
+#define MIDI_JACK_31   (MIDI_IN_PORTS_NUM * 2 + 0x0f)
+#define MIDI_JACK_32   (MIDI_IN_PORTS_NUM * 2 + 0x10)
 
 /**
   * @}

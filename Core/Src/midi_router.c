@@ -69,48 +69,46 @@ void MIDI_ProcessUSBData(void)
   }
   else
   {
-    pSend = NULL;
+    goto midi_event_packet_processed;
   }
 
-  if (pSend != NULL)
-  {
-    message = (messageByte >> 4);
-    param1 = buffUsb[buffUsbCurrIndex + 2];
-    param2 = buffUsb[buffUsbCurrIndex + 3];
+  message = (messageByte >> 4);
+  param1 = buffUsb[buffUsbCurrIndex + 2];
+  param2 = buffUsb[buffUsbCurrIndex + 3];
 
-    if ((messageByte & MIDI_MASK_REAL_TIME_MESSAGE) == MIDI_MASK_REAL_TIME_MESSAGE)
+  if ((messageByte & MIDI_MASK_REAL_TIME_MESSAGE) == MIDI_MASK_REAL_TIME_MESSAGE)
+  {
+    pSend(messageByte);
+  }
+  else if (message == MIDI_MESSAGE_CHANNEL_PRESSURE ||
+           message == MIDI_MESSAGE_PROGRAM_CHANGE ||
+           messageByte == MIDI_MESSAGE_TIME_CODE_QTR_FRAME ||
+           messageByte == MIDI_MESSAGE_SONG_SELECT)
+  {
+    if (*pLastMessageByte != messageByte)
     {
       pSend(messageByte);
+      *pLastMessageByte = messageByte;
     }
-    else if (message == MIDI_MESSAGE_CHANNEL_PRESSURE ||
-             message == MIDI_MESSAGE_PROGRAM_CHANGE ||
-             messageByte == MIDI_MESSAGE_TIME_CODE_QTR_FRAME ||
-             messageByte == MIDI_MESSAGE_SONG_SELECT)
+    pSend(param1);
+  }
+  else if (message == MIDI_MESSAGE_NOTE_ON ||
+           message == MIDI_MESSAGE_NOTE_OFF ||
+           message == MIDI_MESSAGE_KEY_PRESSURE ||
+           message == MIDI_MESSAGE_CONTROL_CHANGE ||
+           messageByte == MIDI_MESSAGE_SONG_POSITION ||
+           message == MIDI_MESSAGE_PITCH_BAND_CHANGE)
+  {
+    if (*pLastMessageByte != messageByte)
     {
-      if (*pLastMessageByte != messageByte)
-      {
-        pSend(messageByte);
-        *pLastMessageByte = messageByte;
-      }
-      pSend(param1);
+      pSend(messageByte);
+      *pLastMessageByte = messageByte;
     }
-    else if (message == MIDI_MESSAGE_NOTE_ON ||
-             message == MIDI_MESSAGE_NOTE_OFF ||
-             message == MIDI_MESSAGE_KEY_PRESSURE ||
-             message == MIDI_MESSAGE_CONTROL_CHANGE ||
-             messageByte == MIDI_MESSAGE_SONG_POSITION ||
-             message == MIDI_MESSAGE_PITCH_BAND_CHANGE)
-    {
-      if (*pLastMessageByte != messageByte)
-      {
-        pSend(messageByte);
-        *pLastMessageByte = messageByte;
-      }
-      pSend(param1);
-      pSend(param2);
-    }
+    pSend(param1);
+    pSend(param2);
   }
 
+  midi_event_packet_processed:
   buffUsbCurrIndex += 4;
 }
 
@@ -219,11 +217,7 @@ void MIDI_ProcessUARTData(void)
   try_to_send_usb_midi_report:
   if (buffUsbReportNextIndex != 0 && USBD_MIDI_GetState(&hUsbDeviceFS) == MIDI_IDLE)
   {
-    if (buffUsbReportNextIndex != MIDI_EPIN_SIZE)
-    {
-      memset(&buffUsbReport[buffUsbReportNextIndex], 0x00, (MIDI_EPIN_SIZE - buffUsbReportNextIndex));
-    }
-    USBD_MIDI_SendReport(&hUsbDeviceFS, buffUsbReport, MIDI_EPIN_SIZE);
+    USBD_MIDI_SendReport(&hUsbDeviceFS, buffUsbReport, buffUsbReportNextIndex);
     buffUsbReportNextIndex = 0;
   }
 }
