@@ -1,3 +1,5 @@
+N.B.: To all those who are citizens of the countries listed: russia, or provide any support or justification for such, my friendly reminder that you are not welcome.
+
 # midi-box-stm32
 
 `Midi Hub Device` implementation (with 1 input and 3 output ports) example based on STM32F103 dev board.  
@@ -5,7 +7,7 @@
 Contains `MIDI Device Class` Middleware implementation for `STM32 HAL USB` drivers, compatible with `STM32CubeMX`/`STM32CubeIDE` code generator.  
 MIDI class V1.0 follows the "Universal Serial Bus Device Class Definition for MIDI Devices. Release 1.0 Nov 1, 1999"  
   
-In file `usbd_midi.h` user can specify number of physical/virtual input type `MIDI_IN_PORTS_NUM` ports and output type `MIDI_OUT_PORTS_NUM` ports.  
+User may specify number of physical/virtual input type `MIDI_IN_PORTS_NUM` ports and output type `MIDI_OUT_PORTS_NUM` ports.  
 The `port` means `cable` number or MIDI Jack associated with the endpoint that is transferring the data.  
 Right now up to 8 ports of each type supported, but only 12 ports in total.  
 
@@ -14,6 +16,7 @@ Right now up to 8 ports of each type supported, but only 12 ports in total.
 In STM32CubeMX / STM32CubeIDE:
 * At `USB` -> enable `Device FS`
 * At `USB_DEVICE` -> choose `Human Interface Device Class (HID)`
+* (Optionally) At `USB_DEVICE` -> `Device Descriptor` -> update device descriptor information with your device info
 * Generate code
   
 To use `MIDI Device Class` middleware, project requires few modifications in generated code:
@@ -32,7 +35,7 @@ if (USBD_RegisterClass(&hUsbDeviceFS, &USBD_MIDI) != USBD_OK) // with this line
 #include "usbd_hid.h"  // replace this line
 #include "usbd_midi.h" // with this line
 ...
-/* USER CODE BEGIN EndPoint_Configuration_HID */ // You may replace HID with MIDI for more convenience, but code generator will not keep it on next code generate
+/* USER CODE BEGIN EndPoint_Configuration_HID */ // this section may be absent if your device has no PMA, so no action required
 HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x01 , PCD_SNG_BUF, 0xC0); // add this line
 HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x81 , PCD_SNG_BUF, 0x100); // leave this line as is
 /* USER CODE END EndPoint_Configuration_HID */
@@ -46,6 +49,8 @@ static uint32_t mem[(sizeof(USBD_MIDI_HandleTypeDef)/4)+1]; // with this line
 #define MIDI_IN_PORTS_NUM   0x01 // Specify input ports number of your device
 #define MIDI_OUT_PORTS_NUM  0x01 // Specify output ports number of your device
 ```
+In some versions of the ST libraries you may face a `MIDI_IN_PORTS_NUM macro is undeclared` error. In this case you need to add `MIDI_IN_PORTS_NUM` and `MIDI_OUT_PORTS_NUM` definitions to the `USB_DEVICE/Target/usbd_conf.h` file.
+
 ## Midi event packet structure:
 ```
 |  4 bits  |  4 bits  |  4 bits  |  4 bits  |  8 bits  |  8 bits  |
