@@ -23,7 +23,7 @@ To use `MIDI Device Class` middleware, project requires few modifications in gen
 * Copy `usbd_midi.c` and `usbd_midi.h` to `Middlewares/ST/STM32_USB_Device_Library/Class/MIDI/` `Src` and `Inc` folders respectively.
 * In your IDE add those folders to C/C++ compiler include path, and files to corresponding group.
 * Modify `USB_DEVICE/App/usb_device.c`:
-```
+```C
 #include "usbd_hid.h"  // replace this line
 #include "usbd_midi.h" // with this line
 ...
@@ -31,7 +31,7 @@ if (USBD_RegisterClass(&hUsbDeviceFS, &USBD_HID) != USBD_OK)  // replace this li
 if (USBD_RegisterClass(&hUsbDeviceFS, &USBD_MIDI) != USBD_OK) // with this line
 ```
 * Modify `USB_DEVICE/Target/usbd_conf.c`:
-```
+```C
 #include "usbd_hid.h"  // replace this line
 #include "usbd_midi.h" // with this line
 ...
@@ -44,7 +44,7 @@ static uint32_t mem[(sizeof(USBD_HID_HandleTypeDef)/4)+1]; // replace this line
 static uint32_t mem[(sizeof(USBD_MIDI_HandleTypeDef)/4)+1]; // with this line
 ```
 * Modify `Core/Inc/main.h`:
-```
+```C
 /* USER CODE BEGIN EM */
 #define MIDI_IN_PORTS_NUM   0x01 // Specify input ports number of your device
 #define MIDI_OUT_PORTS_NUM  0x01 // Specify output ports number of your device
@@ -61,15 +61,15 @@ Please refer to `USB-MIDI Event Packets` in [midi10.pdf](https://github.com/Hypn
 ## Send midi event packets report to host device:
 * The size of `reportBuffer` should not exceed `MIDI_EPIN_SIZE` (64) bytes, and consist of a maximum of 16 event packets.
 * Ensure that MIDI driver status is IDLE before each transfer initiation by:
-```
+```C
 USBD_MIDI_GetState(&hUsbDeviceFS) == MIDI_IDLE
 ```
 * Send midi event packets with:
-```
+```C
 USBD_MIDI_SendReport(&hUsbDeviceFS, reportBuffer, eventPacketsNumber * 4);
 ```
 Example sending one event packet to host device:
-```
+```C
 extern USBD_HandleTypeDef hUsbDeviceFS;
 uint8_t reportBuffer[4] = {
   // cable - represents physical/virtual port number (0 - 15) of the device
@@ -85,7 +85,7 @@ USBD_MIDI_SendReport(&hUsbDeviceFS, reportBuffer, 4);
 ```
 ## Receive midi event packets from host device:
 * Implement this weak function with something like this:
-```
+```C
 void USBD_MIDI_DataInHandler(uint8_t *usb_rx_buffer, uint8_t usb_rx_buffer_length)
 {
   while (usb_rx_buffer_length && *usb_rx_buffer != 0x00)
