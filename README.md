@@ -68,6 +68,21 @@ USBD_MIDI_GetState(&hUsbDeviceFS) == MIDI_IDLE
 ```
 USBD_MIDI_SendReport(&hUsbDeviceFS, reportBuffer, eventPacketsNumber * 4);
 ```
+Example sending one event packet to host device:
+```
+extern USBD_HandleTypeDef hUsbDeviceFS;
+uint8_t reportBuffer[4] = {
+  // cable - represents physical/virtual port number (0 - 15) of the device
+  // in general cases is equal to midi message
+  (cable << 4) | code,
+  (message << 4) | channel,
+  messageByte1,
+  messageByte2,
+};
+...
+while (USBD_MIDI_GetState(&hUsbDeviceFS) != MIDI_IDLE) {};
+USBD_MIDI_SendReport(&hUsbDeviceFS, reportBuffer, 4);
+```
 ## Receive midi event packets from host device:
 * Implement this weak function with something like this:
 ```
@@ -76,7 +91,7 @@ void USBD_MIDI_DataInHandler(uint8_t *usb_rx_buffer, uint8_t usb_rx_buffer_lengt
   while (usb_rx_buffer_length && *usb_rx_buffer != 0x00)
   {
     cable = usb_rx_buffer[0] >> 4;
-    code = usb_rx_buffer[0] & 0x0F; // is equal to message and has no use
+    code = usb_rx_buffer[0] & 0x0F;
     message = usb_rx_buffer[1] >> 4;
     channel = usb_rx_buffer[1] & 0x0F;
     messageByte1 = usb_rx_buffer[2];
