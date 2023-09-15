@@ -73,7 +73,7 @@ Example sending one event packet to host device:
 extern USBD_HandleTypeDef hUsbDeviceFS;
 uint8_t reportBuffer[4] = {
   // cable - represents physical/virtual port number (0 - 15) of the device
-  // in general cases is equal to midi message
+  // code - in general cases is equal to midi message
   (cable << 4) | code,
   (message << 4) | channel,
   messageByte1,
