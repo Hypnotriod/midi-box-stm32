@@ -613,12 +613,12 @@ static uint8_t  USBD_MIDI_Init (USBD_HandleTypeDef *pdev,
   
   USBD_LL_OpenEP(pdev,
                  MIDI_EPIN_ADDR,
-                 USBD_EP_TYPE_INTR,
+                 USBD_EP_TYPE_BULK,
                  MIDI_EPIN_SIZE);  
 
   USBD_LL_OpenEP(pdev,
                MIDI_EPOUT_ADDR,
-               USBD_EP_TYPE_INTR,
+               USBD_EP_TYPE_BULK,
                MIDI_EPOUT_SIZE);
   
   USBD_LL_PrepareReceive(pdev, 
