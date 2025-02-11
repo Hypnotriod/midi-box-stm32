@@ -19,15 +19,18 @@ static uint8_t msgUart1 = 0;
 
 void USBD_MIDI_DataInHandler(uint8_t *usb_rx_buffer, uint8_t usb_rx_buffer_length)
 {
+  uint8_t i = buffUsbNextIndex;
   while (usb_rx_buffer_length && *usb_rx_buffer != 0x00)
   {
-    buffUsb[buffUsbNextIndex++] = *usb_rx_buffer++;
-    buffUsb[buffUsbNextIndex++] = *usb_rx_buffer++;
-    buffUsb[buffUsbNextIndex++] = *usb_rx_buffer++;
-    buffUsb[buffUsbNextIndex++] = *usb_rx_buffer++;
+    buffUsb[i+0] = *usb_rx_buffer++;
+    buffUsb[i+1] = *usb_rx_buffer++;
+    buffUsb[i+2] = *usb_rx_buffer++;
+    buffUsb[i+3] = *usb_rx_buffer++;
 
+    i += 4;
     usb_rx_buffer_length -= 4;
   }
+  buffUsbNextIndex = i;
 }
 
 bool MIDI_HasUSBData(void)
@@ -151,67 +154,66 @@ void MIDI_ProcessUARTData(void)
   if ((messageByte & MIDI_MASK_REAL_TIME_MESSAGE) == MIDI_MASK_REAL_TIME_MESSAGE)
   {
     MIDI_addToUSBReport(cable, messageByte, 0x00, 0x00);
+    goto try_to_send_usb_midi_report;
   }
-  else
+
+  if ((messageByte & MIDI_MASK_STATUS_BYTE) == MIDI_MASK_STATUS_BYTE)
   {
-    if ((messageByte & MIDI_MASK_STATUS_BYTE) == MIDI_MASK_STATUS_BYTE)
-    {
-      *pBuffIndex = 0;
-    }
+    *pBuffIndex = 0;
+  }
 
-    pBuff[*pBuffIndex] = messageByte;
+  pBuff[*pBuffIndex] = messageByte;
 
-    if (*pBuffIndex == 0)
-    {
-      *pMessage = messageByte >> 4;
+  if (*pBuffIndex == 0)
+  {
+    *pMessage = messageByte >> 4;
 
-      if (*pMessage == MIDI_MESSAGE_NOTE_OFF ||
-          *pMessage == MIDI_MESSAGE_NOTE_ON ||
-          *pMessage == MIDI_MESSAGE_KEY_PRESSURE ||
-          *pMessage == MIDI_MESSAGE_CONTROL_CHANGE ||
-          *pMessage == MIDI_MESSAGE_PROGRAM_CHANGE ||
-          *pMessage == MIDI_MESSAGE_CHANNEL_PRESSURE ||
-          *pMessage == MIDI_MESSAGE_PITCH_BAND_CHANGE)
-      {
-        *pBuffIndex = 1;
-      }
-      else if (messageByte == MIDI_MESSAGE_SONG_SELECT ||
-               messageByte == MIDI_MESSAGE_SONG_POSITION ||
-               messageByte == MIDI_MESSAGE_TIME_CODE_QTR_FRAME)
-      {
-        *pMessage = messageByte;
-        *pBuffIndex = 1;
-      }
-    }
-    else if (*pBuffIndex == 1)
+    if (*pMessage == MIDI_MESSAGE_NOTE_OFF ||
+        *pMessage == MIDI_MESSAGE_NOTE_ON ||
+        *pMessage == MIDI_MESSAGE_KEY_PRESSURE ||
+        *pMessage == MIDI_MESSAGE_CONTROL_CHANGE ||
+        *pMessage == MIDI_MESSAGE_PROGRAM_CHANGE ||
+        *pMessage == MIDI_MESSAGE_CHANNEL_PRESSURE ||
+        *pMessage == MIDI_MESSAGE_PITCH_BAND_CHANGE)
     {
-      if (*pMessage == MIDI_MESSAGE_CHANNEL_PRESSURE ||
-          *pMessage == MIDI_MESSAGE_PROGRAM_CHANGE ||
-          *pMessage == MIDI_MESSAGE_TIME_CODE_QTR_FRAME ||
-          *pMessage == MIDI_MESSAGE_SONG_SELECT)
-      {
-        MIDI_addToUSBReport(cable, pBuff[0], pBuff[1], 0x00);
-        *pBuffIndex = 1;
-      }
-      else
-      {
-        *pBuffIndex = 2;
-      }
-    }
-    else if (*pBuffIndex == 2)
-    {
-      if (*pMessage == MIDI_MESSAGE_NOTE_ON ||
-          *pMessage == MIDI_MESSAGE_NOTE_OFF ||
-          *pMessage == MIDI_MESSAGE_KEY_PRESSURE ||
-          *pMessage == MIDI_MESSAGE_CONTROL_CHANGE ||
-          *pMessage == MIDI_MESSAGE_SONG_POSITION ||
-          *pMessage == MIDI_MESSAGE_PITCH_BAND_CHANGE)
-      {
-        MIDI_addToUSBReport(cable, pBuff[0], pBuff[1], pBuff[2]);
-      }
-
       *pBuffIndex = 1;
     }
+    else if (messageByte == MIDI_MESSAGE_SONG_SELECT ||
+             messageByte == MIDI_MESSAGE_SONG_POSITION ||
+             messageByte == MIDI_MESSAGE_TIME_CODE_QTR_FRAME)
+    {
+      *pMessage = messageByte;
+      *pBuffIndex = 1;
+    }
+  }
+  else if (*pBuffIndex == 1)
+  {
+    if (*pMessage == MIDI_MESSAGE_CHANNEL_PRESSURE ||
+        *pMessage == MIDI_MESSAGE_PROGRAM_CHANGE ||
+        *pMessage == MIDI_MESSAGE_TIME_CODE_QTR_FRAME ||
+        *pMessage == MIDI_MESSAGE_SONG_SELECT)
+    {
+      MIDI_addToUSBReport(cable, pBuff[0], pBuff[1], 0x00);
+      *pBuffIndex = 1;
+    }
+    else
+    {
+      *pBuffIndex = 2;
+    }
+  }
+  else if (*pBuffIndex == 2)
+  {
+    if (*pMessage == MIDI_MESSAGE_NOTE_ON ||
+        *pMessage == MIDI_MESSAGE_NOTE_OFF ||
+        *pMessage == MIDI_MESSAGE_KEY_PRESSURE ||
+        *pMessage == MIDI_MESSAGE_CONTROL_CHANGE ||
+        *pMessage == MIDI_MESSAGE_SONG_POSITION ||
+        *pMessage == MIDI_MESSAGE_PITCH_BAND_CHANGE)
+    {
+      MIDI_addToUSBReport(cable, pBuff[0], pBuff[1], pBuff[2]);
+    }
+
+    *pBuffIndex = 1;
   }
 
   try_to_send_usb_midi_report:
