@@ -84,7 +84,7 @@ while (USBD_MIDI_GetState(&hUsbDeviceFS) != MIDI_IDLE) {};
 USBD_MIDI_SendReport(&hUsbDeviceFS, reportBuffer, 4);
 ```
 ## Receive midi event packets from host device:
-* Implement this weak function with something like this:
+* Implement `USBD_MIDI_DataInHandler` weak function with something like this:
 ```C
 void USBD_MIDI_DataInHandler(uint8_t *usb_rx_buffer, uint8_t usb_rx_buffer_length)
 {
