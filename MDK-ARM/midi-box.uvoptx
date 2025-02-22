@@ -82,22 +82,22 @@
         <Book>
           <Number>0</Number>
           <Title>Quick Start Guide (MCBSTM32E)</Title>
-          <Path>C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Boards\Keil\MCBSTM32E\Documentation\STM32E_QSG.pdf</Path>
+          <Path>C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.1.0\Documents\STM32E_QSG.pdf</Path>
         </Book>
         <Book>
           <Number>1</Number>
           <Title>Base Board Schematics (MCBSTM32E)</Title>
-          <Path>C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Boards\Keil\MCBSTM32E\Documentation\mcbstm32e-base-board-schematics.pdf</Path>
+          <Path>C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.1.0\Documents\mcbstm32e-base-board-schematics.pdf</Path>
         </Book>
         <Book>
           <Number>2</Number>
           <Title>Display Board Schematics (MCBSTM32E)</Title>
-          <Path>C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Boards\Keil\MCBSTM32E\Documentation\mcbstm32e-display-board-schematics.pdf</Path>
+          <Path>C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.1.0\Documents\mcbstm32e-display-board-schematics.pdf</Path>
         </Book>
         <Book>
           <Number>3</Number>
           <Title>User Manual (MCBSTM32E)</Title>
-          <Path>C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Boards\Keil\MCBSTM32E\Documentation\mcbstm32e.chm</Path>
+          <Path>C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.1.0\Documents\mcbstm32e.chm</Path>
         </Book>
         <Book>
           <Number>4</Number>
@@ -106,8 +106,8 @@
         </Book>
       </Books>
       <DebugOpt>
-        <uSim>0</uSim>
-        <uTrg>1</uTrg>
+        <uSim>1</uSim>
+        <uTrg>0</uTrg>
         <sLdApp>1</sLdApp>
         <sGomain>1</sGomain>
         <sRbreak>1</sRbreak>
@@ -143,6 +143,11 @@
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
+          <Key>DLGDARM</Key>
+          <Name>(1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=-1,-1,-1,-1,0)(1009=-1,-1,-1,-1,0)</Name>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
           <Key>DLGUARM</Key>
           <Name>(105=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
@@ -159,7 +164,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>ARMDBGFLAGS</Key>
-          <Name></Name>
+          <Name>-T0</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -371,7 +376,7 @@
 
   <Group>
     <GroupName>Drivers/STM32F1xx_HAL_Driver</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -652,18 +657,6 @@
       <bDave2>0</bDave2>
       <PathWithFileName>../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c</PathWithFileName>
       <FilenameWithoutPath>usbd_ioreq.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>7</GroupNumber>
-      <FileNumber>33</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>../Middlewares/ST/STM32_USB_Device_Library/Class/HID/Src/usbd_hid.c</PathWithFileName>
-      <FilenameWithoutPath>usbd_hid.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
