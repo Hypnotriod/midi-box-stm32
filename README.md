@@ -59,7 +59,7 @@ In some versions of the ST libraries you may face a `MIDI_IN_PORTS_NUM macro is 
 ```
 Please refer to the `USB-MIDI Event Packets` chapter in the [midi10.pdf](https://github.com/Hypnotriod/midi-box-stm32/blob/master/doc/midi10.pdf) documentation for more info.  
 ## Send the midi event packets report to the host device:
-* The size of `reportBuffer` should not exceed `MIDI_EPIN_SIZE` (64) bytes, and consist of a maximum of 16 event packets.
+* The size of the `reportBuffer` should not exceed the `MIDI_EPIN_SIZE` (64) bytes, and consist of a maximum of 16 event packets.
 * Ensure that the MIDI driver status is IDLE before each transfer initiation with:
 ```C
 USBD_MIDI_GetState(&hUsbDeviceFS) == MIDI_IDLE
@@ -68,7 +68,7 @@ USBD_MIDI_GetState(&hUsbDeviceFS) == MIDI_IDLE
 ```C
 USBD_MIDI_SendReport(&hUsbDeviceFS, reportBuffer, eventPacketsNumber * 4);
 ```
-Example sending one event packet to the host device:
+Example of sending a single event packet to the host device:
 ```C
 extern USBD_HandleTypeDef hUsbDeviceFS;
 uint8_t reportBuffer[4] = {
@@ -84,7 +84,7 @@ while (USBD_MIDI_GetState(&hUsbDeviceFS) != MIDI_IDLE) {};
 USBD_MIDI_SendReport(&hUsbDeviceFS, reportBuffer, 4);
 ```
 ## Receive the midi event packets report from the host device:
-* Implement the `USBD_MIDI_DataInHandler` weak function with something like this:
+* Implement the weak `USBD_MIDI_DataInHandler` function with something like this:
 ```C
 void USBD_MIDI_DataInHandler(uint8_t *usb_rx_buffer, uint8_t usb_rx_buffer_length)
 {
