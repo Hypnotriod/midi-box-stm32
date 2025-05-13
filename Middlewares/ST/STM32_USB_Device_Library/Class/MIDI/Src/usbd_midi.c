@@ -858,11 +858,13 @@ static uint8_t  USBD_MIDI_DataIn (USBD_HandleTypeDef *pdev,
   */
 static uint8_t  USBD_MIDI_DataOut (USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
-  if (epnum != (MIDI_EPOUT_ADDR & 0x0F)) return USBD_FAIL;
+  uint8_t len;
 
-  USBD_MIDI_DataInHandler(usb_rx_buffer, MIDI_EPOUT_SIZE);
+  if (epnum != (MIDI_EPOUT_ADDR & 0x0F)) return USBD_FAIL;
   
-  memset(usb_rx_buffer, 0, MIDI_EPOUT_SIZE);
+  len = (uint8_t)HAL_PCD_EP_GetRxCount((PCD_HandleTypeDef*) pdev->pData, epnum);
+
+  USBD_MIDI_DataInHandler(usb_rx_buffer, len);
   
   USBD_LL_PrepareReceive(pdev, MIDI_EPOUT_ADDR, usb_rx_buffer, MIDI_EPOUT_SIZE);  
   
@@ -871,12 +873,13 @@ static uint8_t  USBD_MIDI_DataOut (USBD_HandleTypeDef *pdev, uint8_t epnum)
 
 /**
   * @brief  USBD_MIDI_DataInHandler
-  * @param  usb_rx_buffer: midi messages buffer
-  * @param  usb_rx_buffer_length: midi messages buffer length
+  * @param  report: pointer to report
+  * @param  len: size of report
   */
-__weak extern void USBD_MIDI_DataInHandler(uint8_t * usb_rx_buffer, uint8_t usb_rx_buffer_length)
+__weak extern void USBD_MIDI_DataInHandler(uint8_t *report, uint8_t len)
 {
-  // For user implementation.
+  UNUSED(report);
+  UNUSED(len);
 }
 
 /**

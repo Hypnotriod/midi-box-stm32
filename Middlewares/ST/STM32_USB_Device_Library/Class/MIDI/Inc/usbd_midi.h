@@ -161,7 +161,7 @@ USBD_MIDI_HandleTypeDef;
   */ 
 
 extern USBD_ClassTypeDef  USBD_MIDI;
-extern void USBD_MIDI_DataInHandler(uint8_t * usb_rx_buffer, uint8_t usb_rx_buffer_length);
+extern void USBD_MIDI_DataInHandler(uint8_t *report, uint8_t len);
 
 /**
   * @}

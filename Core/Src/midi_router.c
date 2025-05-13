@@ -44,18 +44,18 @@ static uint8_t buffUart1[3] = {0};
 static uint8_t buffUartIndex1 = 0;
 static uint8_t msgUart1 = 0;
 
-void USBD_MIDI_DataInHandler(uint8_t *usb_rx_buffer, uint8_t usb_rx_buffer_length)
+void USBD_MIDI_DataInHandler(uint8_t *report, uint8_t len)
 {
   uint8_t i = buffUsbNextIndex;
-  while (usb_rx_buffer_length && *usb_rx_buffer != 0x00)
+  while (len)
   {
-    buffUsb[i+0] = *usb_rx_buffer++;
-    buffUsb[i+1] = *usb_rx_buffer++;
-    buffUsb[i+2] = *usb_rx_buffer++;
-    buffUsb[i+3] = *usb_rx_buffer++;
+    buffUsb[i+0] = *report++;
+    buffUsb[i+1] = *report++;
+    buffUsb[i+2] = *report++;
+    buffUsb[i+3] = *report++;
 
     i += 4;
-    usb_rx_buffer_length -= 4;
+    len -= 4;
   }
   buffUsbNextIndex = i;
 }

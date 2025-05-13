@@ -86,19 +86,19 @@ USBD_MIDI_SendReport(&hUsbDeviceFS, reportBuffer, 4);
 ## Receive the midi event packets report from the host device:
 * Implement the weak `USBD_MIDI_DataInHandler` function with something like this:
 ```C
-void USBD_MIDI_DataInHandler(uint8_t *usb_rx_buffer, uint8_t usb_rx_buffer_length)
+void USBD_MIDI_DataInHandler(uint8_t *report, uint8_t len)
 {
-  while (usb_rx_buffer_length && *usb_rx_buffer != 0x00)
+  while (len)
   {
     // cable - represents the physical/virtual output port number (0 - 15) of the device
-    cable = usb_rx_buffer[0] >> 4;
-    code = usb_rx_buffer[0] & 0x0F;
-    message = usb_rx_buffer[1] >> 4;
-    channel = usb_rx_buffer[1] & 0x0F;
-    messageByte1 = usb_rx_buffer[2];
-    messageByte2 = usb_rx_buffer[3];
-    usb_rx_buffer += 4;
-    usb_rx_buffer_length -= 4;
+    cable = report[0] >> 4;
+    code = report[0] & 0x0F;
+    message = report[1] >> 4;
+    channel = report[1] & 0x0F;
+    messageByte1 = report[2];
+    messageByte2 = report[3];
+    report += 4;
+    len -= 4;
   }
 }
 ```
