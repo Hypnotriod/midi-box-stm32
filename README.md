@@ -58,7 +58,7 @@ In some versions of the ST libraries you may face a `MIDI_IN_PORTS_NUM macro is 
 |   Cable  |   Code   |  Message |  Channel |  Byte 1  |  Byte 2  |
 ```
 Please refer to the `USB-MIDI Event Packets` chapter in the [midi10.pdf](https://github.com/Hypnotriod/midi-box-stm32/blob/master/doc/midi10.pdf) documentation for more info.  
-## Send midi event packets report to host device:
+## Send the midi event packets report to the host device:
 * The size of `reportBuffer` should not exceed `MIDI_EPIN_SIZE` (64) bytes, and consist of a maximum of 16 event packets.
 * Ensure that the MIDI driver status is IDLE before each transfer initiation with:
 ```C
@@ -83,7 +83,7 @@ uint8_t reportBuffer[4] = {
 while (USBD_MIDI_GetState(&hUsbDeviceFS) != MIDI_IDLE) {};
 USBD_MIDI_SendReport(&hUsbDeviceFS, reportBuffer, 4);
 ```
-## Receive midi event packets from the host device:
+## Receive the midi event packets report from the host device:
 * Implement the `USBD_MIDI_DataInHandler` weak function with something like this:
 ```C
 void USBD_MIDI_DataInHandler(uint8_t *usb_rx_buffer, uint8_t usb_rx_buffer_length)
