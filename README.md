@@ -7,22 +7,22 @@ N.B.: To all those who are citizens of the countries listed: russia, or provide 
 Contains `MIDI Device Class` Middleware implementation for `STM32 HAL USB` drivers, compatible with `STM32CubeMX`/`STM32CubeIDE` code generator.  
 MIDI class V1.0 follows the "Universal Serial Bus Device Class Definition for MIDI Devices. Release 1.0 Nov 1, 1999"  
   
-User may specify number of physical/virtual input type `MIDI_IN_PORTS_NUM` ports and output type `MIDI_OUT_PORTS_NUM` ports.  
-The `port` means `cable` number or MIDI Jack associated with the endpoint that is transferring the data.  
-Right now up to 8 ports of each type supported, but only 12 ports in total.  
+User may specify the number of physical/virtual input type `MIDI_IN_PORTS_NUM` ports and output type `MIDI_OUT_PORTS_NUM` ports of the device.  
+The `port` means the `cable` number or MIDI Jack associated with the endpoint that is transferring the data.  
+Up to 8 ports of each type supported, but only 12 ports in total.  
 
 ## Configuring user project with STM32CubeMX code generator to use MIDI Device Class Middleware
 
 In STM32CubeMX / STM32CubeIDE:
 * At `USB` -> enable `Device FS`
 * At `USB_DEVICE` -> choose `Human Interface Device Class (HID)`
-* (Optionally) At `USB_DEVICE` -> `Device Descriptor` -> update device descriptor information with your device info
+* (Optionally) At `USB_DEVICE` -> `Device Descriptor` -> update the device descriptor information with your device info
 * Generate code
   
-To use `MIDI Device Class` middleware, project requires few modifications in generated code:
-* Copy `usbd_midi.c` and `usbd_midi.h` to `Middlewares/ST/STM32_USB_Device_Library/Class/MIDI/` `Src` and `Inc` folders respectively.
-* In your IDE add those folders to C/C++ compiler include path, and files to corresponding group.
-* Modify `USB_DEVICE/App/usb_device.c`:
+To use the `MIDI Device Class` middleware, project requires few modifications in the generated code:
+* Copy the `usbd_midi.c` and `usbd_midi.h` to the `Middlewares/ST/STM32_USB_Device_Library/Class/MIDI/` `Src` and `Inc` folders respectively.
+* In your IDE add those folders to C/C++ compiler include path, and files to the corresponding group.
+* Modify the `USB_DEVICE/App/usb_device.c`:
 ```C
 #include "usbd_hid.h"  // replace this line
 #include "usbd_midi.h" // with this line
@@ -57,10 +57,10 @@ In some versions of the ST libraries you may face a `MIDI_IN_PORTS_NUM macro is 
 |          |          |        MIDI_0       |  MIDI_1  |  MIDI_2  |
 |   Cable  |   Code   |  Message |  Channel |  Byte 1  |  Byte 2  |
 ```
-Please refer to `USB-MIDI Event Packets` in [midi10.pdf](https://github.com/Hypnotriod/midi-box-stm32/blob/master/doc/midi10.pdf) for more info.  
+Please refer to the `USB-MIDI Event Packets` chapter in the [midi10.pdf](https://github.com/Hypnotriod/midi-box-stm32/blob/master/doc/midi10.pdf) documentation for more info.  
 ## Send midi event packets report to host device:
 * The size of `reportBuffer` should not exceed `MIDI_EPIN_SIZE` (64) bytes, and consist of a maximum of 16 event packets.
-* Ensure that MIDI driver status is IDLE before each transfer initiation by:
+* Ensure that the MIDI driver status is IDLE before each transfer initiation with:
 ```C
 USBD_MIDI_GetState(&hUsbDeviceFS) == MIDI_IDLE
 ```
@@ -68,12 +68,12 @@ USBD_MIDI_GetState(&hUsbDeviceFS) == MIDI_IDLE
 ```C
 USBD_MIDI_SendReport(&hUsbDeviceFS, reportBuffer, eventPacketsNumber * 4);
 ```
-Example sending one event packet to host device:
+Example sending one event packet to the host device:
 ```C
 extern USBD_HandleTypeDef hUsbDeviceFS;
 uint8_t reportBuffer[4] = {
-  // cable - represents physical/virtual port number (0 - 15) of the device
-  // code - in general cases is equal to midi message
+  // cable - represents the physical/virtual input port number (0 - 15) of the device
+  // code - in general cases is equal to the midi message
   (cable << 4) | code,
   (message << 4) | channel,
   messageByte1,
@@ -83,13 +83,14 @@ uint8_t reportBuffer[4] = {
 while (USBD_MIDI_GetState(&hUsbDeviceFS) != MIDI_IDLE) {};
 USBD_MIDI_SendReport(&hUsbDeviceFS, reportBuffer, 4);
 ```
-## Receive midi event packets from host device:
-* Implement `USBD_MIDI_DataInHandler` weak function with something like this:
+## Receive midi event packets from the host device:
+* Implement the `USBD_MIDI_DataInHandler` weak function with something like this:
 ```C
 void USBD_MIDI_DataInHandler(uint8_t *usb_rx_buffer, uint8_t usb_rx_buffer_length)
 {
   while (usb_rx_buffer_length && *usb_rx_buffer != 0x00)
   {
+    // cable - represents the physical/virtual output port number (0 - 15) of the device
     cable = usb_rx_buffer[0] >> 4;
     code = usb_rx_buffer[0] & 0x0F;
     message = usb_rx_buffer[1] >> 4;
