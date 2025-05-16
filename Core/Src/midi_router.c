@@ -67,7 +67,7 @@ bool MIDI_HasUSBData(void)
 
 void MIDI_ProcessUSBData(void)
 {
-  static uint8_t lastMessagesBytePerCable[MIDI_CABLES_NUMBER] = {0};
+  static uint8_t lastMessagesBytePerCable[MIDI_OUT_PORTS_NUM] = {0};
   uint8_t *pLastMessageByte;
   uint8_t cable;
   uint8_t messageByte;
@@ -168,7 +168,7 @@ void MIDI_ProcessUARTData(void)
   if (UART1_Available())
   {
     messageByte = UART1_Get();
-    cable = MIDI_UART1_CABLE;
+    cable = 0;
     pBuff = buffUart1;
     pBuffIndex = &buffUartIndex1;
     pMessage = &msgUart1;

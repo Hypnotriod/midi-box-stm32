@@ -32,15 +32,9 @@
 #include "stm32f1xx_hal.h"
 #include "stdbool.h"
 
-#define MIDI_UART1_CABLE   0x00
-#define MIDI_CABLES_NUMBER 3
-
 #define MIDI_BUFFER_LENGTH           256
 #define MIDI_MAX_CHANNELS_NUM        16
 #define MIDI_MAX_CABLES_NUM          16
-#define MIDI_MAX_ADDITIONAL_VELOCITY 127
-#define MIDI_MAX_NOTE_SHIFT          24
-#define MIDI_MIN_NOTE_SHIFT         -24
 
 #define MIDI_MESSAGE_NOTE_OFF          0x08
 #define MIDI_MESSAGE_NOTE_ON           0x09
@@ -73,11 +67,10 @@
 #define MIDI_MESSAGE_PITCH_BAND_MIN    0
 
 #define MIDI_MESSAGE_NOTE_MAX             127
-#define MIDI_MESSAGE_NOTE_VOLUME_MAX      127
+#define MIDI_MESSAGE_NOTE_VELOCITY_MAX    127
 #define MIDI_MESSAGE_CONTROL_VALUE_MAX    127
 #define MIDI_MESSAGE_CONTROL_VALUE_MIN    0
 #define MIDI_MESSAGE_CONTROL_VALUE_MIDDLE 64
-#define MIDI_MESSAGE_DEFAULT_VOLUME       100
 
 void MIDI_ProcessUSBData(void);
 void MIDI_ProcessUARTData(void);
