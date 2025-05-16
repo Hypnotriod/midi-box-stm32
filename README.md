@@ -84,7 +84,7 @@ while (USBD_MIDI_GetState(&hUsbDeviceFS) != MIDI_IDLE) {};
 USBD_MIDI_SendReport(&hUsbDeviceFS, reportBuffer, 4);
 ```
 ## Receive the midi event packets report from the host device:
-* Implement the weak `USBD_MIDI_DataInHandler` function with something like this:
+* Implement the weak `USBD_MIDI_DataInHandler` function *(which will be called during the USB IRQ routine)* with something like this:
 ```C
 void USBD_MIDI_DataInHandler(uint8_t *report, uint8_t len)
 {
