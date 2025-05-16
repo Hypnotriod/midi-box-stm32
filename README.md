@@ -2,14 +2,14 @@ N.B.: To all those who are citizens of the countries listed: russia, or provide 
 
 # midi-box-stm32
 
-`Midi Hub Device` implementation (with 1 input and 3 output ports) example based on STM32F103 dev board.  
+`Midi Hub Device` implementation (with 1 input and 3 output ports) example based on the STM32F103 dev board.  
   
-Contains `MIDI Device Class` Middleware implementation for `STM32 HAL USB` drivers, compatible with `STM32CubeMX`/`STM32CubeIDE` code generator.  
-MIDI class V1.0 follows the "Universal Serial Bus Device Class Definition for MIDI Devices. Release 1.0 Nov 1, 1999"  
+Contains `MIDI Device Class` Middleware implementation for `STM32 HAL USB` drivers, compatible with the `STM32CubeMX`/`STM32CubeIDE` code generator.  
+The MIDI class V1.0 follows the "Universal Serial Bus Device Class Definition for MIDI Devices. Release 1.0 Nov 1, 1999"  
   
-User may specify the number of physical/virtual input type `MIDI_IN_PORTS_NUM` ports and output type `MIDI_OUT_PORTS_NUM` ports of the device.  
-The `port` is associated  with the `cable` number in the midi event packet.  
-Up to 8 ports of each type supported, but only 12 ports in total.  
+The user may specify the number of physical/virtual input type `MIDI_IN_PORTS_NUM` ports and output type `MIDI_OUT_PORTS_NUM` ports of the device.  
+The `port` is associated with the `cable` number in the MIDI event packet.  
+Up to 8 ports of each type are supported, but only 12 ports in total.  
 
 ## Configuring user project with STM32CubeMX code generator to use MIDI Device Class Middleware
 
@@ -19,9 +19,9 @@ In STM32CubeMX / STM32CubeIDE:
 * (Optionally) At `USB_DEVICE` -> `Device Descriptor` -> update the device descriptor information with your device info
 * Generate code
   
-To use the `MIDI Device Class` middleware, project requires few modifications in the generated code:
+To use the `MIDI Device Class` middleware, the project requires a few modifications in the generated code:
 * Copy the `usbd_midi.c` and `usbd_midi.h` to the `Middlewares/ST/STM32_USB_Device_Library/Class/MIDI/` `Src` and `Inc` folders respectively.
-* In your IDE add those folders to C/C++ compiler include path, and files to the corresponding group.
+* In your IDE add those folders to the C/C++ compiler include path, and add the files to the corresponding group.
 * Modify the `USB_DEVICE/App/usb_device.c`:
 ```C
 #include "usbd_hid.h"  // replace this line
@@ -49,7 +49,7 @@ static uint32_t mem[(sizeof(USBD_MIDI_HandleTypeDef)/4)+1]; // with this line
 #define MIDI_IN_PORTS_NUM   0x01 // Specify input ports number of your device
 #define MIDI_OUT_PORTS_NUM  0x01 // Specify output ports number of your device
 ```
-In some versions of the ST libraries you may face a `MIDI_IN_PORTS_NUM macro is undeclared` error. In this case you need to add `MIDI_IN_PORTS_NUM` and `MIDI_OUT_PORTS_NUM` definitions to the `USB_DEVICE/Target/usbd_conf.h` file.
+In some versions of the ST libraries you may encounter a `MIDI_IN_PORTS_NUM macro is undeclared` error. In this case you need to add `MIDI_IN_PORTS_NUM` and `MIDI_OUT_PORTS_NUM` definitions to the `USB_DEVICE/Target/usbd_conf.h` file.
 
 ## Midi event packet structure:
 ```
@@ -57,21 +57,21 @@ In some versions of the ST libraries you may face a `MIDI_IN_PORTS_NUM macro is 
 |          |          |        MIDI_0       |  MIDI_1  |  MIDI_2  |
 |   Cable  |   Code   |  Message |  Channel |  Byte 1  |  Byte 2  |
 ```
-Please refer to the `USB-MIDI Event Packets` chapter in the [midi10.pdf](https://github.com/Hypnotriod/midi-box-stm32/blob/master/doc/midi10.pdf) documentation for more info.  
-## Send the midi event packets report to the host device:
-* The size of the `reportBuffer` should not exceed the `MIDI_EPIN_SIZE` (64) bytes, and consist of a maximum of 16 event packets.
-* Ensure that the MIDI driver status is IDLE before each transfer initiation with:
+Please refer to the `USB-MIDI Event Packets` chapter in the [midi10.pdf](https://github.com/Hypnotriod/midi-box-stm32/blob/master/doc/midi10.pdf) documentation for more information.  
+## Send the midi event packets to the host device:
+* The size of the `packetsBuffer` should not exceed the `MIDI_EPIN_SIZE` (64 bytes), and should consist of a maximum of 16 event packets.
+* Ensure that the MIDI driver status is IDLE before each transfer initiation by using:
 ```C
 USBD_MIDI_GetState(&hUsbDeviceFS) == MIDI_IDLE
 ```
 * Send midi event packets with:
 ```C
-USBD_MIDI_SendReport(&hUsbDeviceFS, reportBuffer, eventPacketsNumber * 4);
+USBD_MIDI_SendPackets(&hUsbDeviceFS, packetsBuffer, eventPacketsNumber * 4);
 ```
 Example of sending a single event packet to the host device:
 ```C
 extern USBD_HandleTypeDef hUsbDeviceFS;
-uint8_t reportBuffer[4] = {
+uint8_t packetsBuffer[4] = {
   // cable - represents the physical/virtual input port number (0 - 15) of the device
   // code - in general cases is equal to the midi message
   (cable << 4) | code,
@@ -81,23 +81,23 @@ uint8_t reportBuffer[4] = {
 };
 ...
 while (USBD_MIDI_GetState(&hUsbDeviceFS) != MIDI_IDLE) {};
-USBD_MIDI_SendReport(&hUsbDeviceFS, reportBuffer, 4);
+USBD_MIDI_SendPackets(&hUsbDeviceFS, packetsBuffer, 4);
 ```
-## Receive the midi event packets report from the host device:
-* Implement the weak `USBD_MIDI_DataInHandler` function *(which will be called during the USB IRQ routine)* with something like this:
+## Receive the midi event packets from the host device:
+Override the weak `USBD_MIDI_OnPacketsReceived` callback function *(which will be called during the USB interrupt routine)* with code similar to the following:
 ```C
-void USBD_MIDI_DataInHandler(uint8_t *report, uint8_t len)
+void USBD_MIDI_OnPacketsReceived(uint8_t *data, uint8_t len)
 {
   while (len)
   {
     // cable - represents the physical/virtual output port number (0 - 15) of the device
-    cable = report[0] >> 4;
-    code = report[0] & 0x0F;
-    message = report[1] >> 4;
-    channel = report[1] & 0x0F;
-    messageByte1 = report[2];
-    messageByte2 = report[3];
-    report += 4;
+    cable = data[0] >> 4;
+    code = data[0] & 0x0F;
+    message = data[1] >> 4;
+    channel = data[1] & 0x0F;
+    messageByte1 = data[2];
+    messageByte2 = data[3];
+    data += 4;
     len -= 4;
   }
 }

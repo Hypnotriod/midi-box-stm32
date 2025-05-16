@@ -179,7 +179,7 @@ __ALIGN_BEGIN static uint8_t USBD_MIDI_CfgDesc[USB_MIDI_CONFIG_DESC_SIZE]  __ALI
   0x01,                 /*bDescriptorSubtype: MS_HEADER subtype*/
   0x00,
   0x01,                 /*BcdADC: Revision of this class specification*/
-  USB_MIDI_REPORT_DESC_SIZE,
+  USB_MIDI_INTERFACE_DESC_SIZE,
   0x00,                  /*wTotalLength: Total size of class-specific descriptors*/
 
 #if MIDI_IN_PORTS_NUM >= 1
@@ -782,15 +782,15 @@ uint8_t USBD_MIDI_GetState(USBD_HandleTypeDef  *pdev)
 }
 
 /**
-  * @brief  USBD_MIDI_SendReport 
-  *         Send MIDI Report
+  * @brief  USBD_MIDI_SendPackets 
+  *         Send MIDI event packets to the host
   * @param  pdev: device instance
-  * @param  report: pointer to report
-  * @param  len: size of report
+  * @param  data: pointer to the packets data
+  * @param  len: size of the data
   * @retval status
   */
-uint8_t USBD_MIDI_SendReport     (USBD_HandleTypeDef  *pdev, 
-                                 uint8_t *report,
+uint8_t USBD_MIDI_SendPackets(USBD_HandleTypeDef  *pdev, 
+                                 uint8_t *data,
                                  uint16_t len)
 {
   USBD_MIDI_HandleTypeDef *hmidi = pdev->pClassData;
@@ -800,7 +800,7 @@ uint8_t USBD_MIDI_SendReport     (USBD_HandleTypeDef  *pdev,
     if(hmidi->state == MIDI_IDLE)
     {
       hmidi->state = MIDI_BUSY;
-      USBD_LL_Transmit (pdev, MIDI_EPIN_ADDR, report, len);
+      USBD_LL_Transmit(pdev, MIDI_EPIN_ADDR, data, len);
     }
   }
   return USBD_OK;
@@ -842,11 +842,22 @@ uint8_t  *USBD_MIDI_DeviceQualifierDescriptor (uint16_t *length)
 static uint8_t  USBD_MIDI_DataIn (USBD_HandleTypeDef *pdev, 
                               uint8_t epnum)
 {
-  
+  UNUSED(epnum);
   /* Ensure that the FIFO is empty before a new transfer, this condition could 
   be caused by  a new transfer before the end of the previous transfer */
   ((USBD_MIDI_HandleTypeDef *)pdev->pClassData)->state = MIDI_IDLE;
+
+  USBD_MIDI_OnPacketsSent();
+
   return USBD_OK;
+}
+
+/**
+  * @brief  USBD_MIDI_OnPacketsSent
+  *         on usb midi packets sent to the host callback
+  */
+__weak extern void USBD_MIDI_OnPacketsSent(void)
+{
 }
 
 /**
@@ -864,7 +875,7 @@ static uint8_t  USBD_MIDI_DataOut (USBD_HandleTypeDef *pdev, uint8_t epnum)
   
   len = (uint8_t)HAL_PCD_EP_GetRxCount((PCD_HandleTypeDef*) pdev->pData, epnum);
 
-  USBD_MIDI_DataInHandler(usb_rx_buffer, len);
+  USBD_MIDI_OnPacketsReceived(usb_rx_buffer, len);
   
   USBD_LL_PrepareReceive(pdev, MIDI_EPOUT_ADDR, usb_rx_buffer, MIDI_EPOUT_SIZE);  
   
@@ -872,13 +883,14 @@ static uint8_t  USBD_MIDI_DataOut (USBD_HandleTypeDef *pdev, uint8_t epnum)
 }
 
 /**
-  * @brief  USBD_MIDI_DataInHandler
-  * @param  report: pointer to report
-  * @param  len: size of report
+  * @brief  USBD_MIDI_OnPacketsReceived
+  *         on usb midi packets received from the host callback
+  * @param  data: pointer to the data packet
+  * @param  len: size of the data
   */
-__weak extern void USBD_MIDI_DataInHandler(uint8_t *report, uint8_t len)
+__weak extern void USBD_MIDI_OnPacketsReceived(uint8_t *data, uint8_t len)
 {
-  UNUSED(report);
+  UNUSED(data);
   UNUSED(len);
 }
 

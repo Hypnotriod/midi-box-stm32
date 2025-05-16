@@ -74,6 +74,5 @@
 
 void MIDI_ProcessUSBData(void);
 void MIDI_ProcessUARTData(void);
-void MIDI_addToUSBReport(uint8_t cable, uint8_t message, uint8_t param1, uint8_t param2);
 
 #endif
