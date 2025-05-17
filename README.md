@@ -68,7 +68,7 @@ USBD_MIDI_GetState(&hUsbDeviceFS) == MIDI_IDLE
 ```C
 USBD_MIDI_SendPackets(&hUsbDeviceFS, packetsBuffer, eventPacketsNumber * 4);
 ```
-Example of sending a single event packet to the host device:
+Example of sending a single event packet to the host:
 ```C
 extern USBD_HandleTypeDef hUsbDeviceFS;
 uint8_t packetsBuffer[4] = {
@@ -83,7 +83,7 @@ uint8_t packetsBuffer[4] = {
 while (USBD_MIDI_GetState(&hUsbDeviceFS) != MIDI_IDLE) {};
 USBD_MIDI_SendPackets(&hUsbDeviceFS, packetsBuffer, 4);
 ```
-## Receive the midi event packets from the host device:
+## Receive the midi event packets from the host:
 Override the weak `USBD_MIDI_OnPacketsReceived` callback function *(which will be called during the USB interrupt routine)* with code similar to the following:
 ```C
 void USBD_MIDI_OnPacketsReceived(uint8_t *data, uint8_t len)
