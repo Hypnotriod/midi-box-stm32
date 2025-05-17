@@ -70,7 +70,9 @@ USBD_MIDI_SendPackets(&hUsbDeviceFS, packetsBuffer, eventPacketsNumber * 4);
 ```
 Example of sending a single event packet to the host:
 ```C
+#include "usbd_midi.h"
 extern USBD_HandleTypeDef hUsbDeviceFS;
+...
 uint8_t packetsBuffer[4] = {
   // cable - represents the physical/virtual input port number (0 - 15) of the device
   // code - in general cases is equal to the midi message
