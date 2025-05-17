@@ -85,7 +85,7 @@ uint8_t packetsBuffer[4] = {
 while (USBD_MIDI_GetState(&hUsbDeviceFS) != MIDI_IDLE) {};
 USBD_MIDI_SendPackets(&hUsbDeviceFS, packetsBuffer, 4);
 ```
-## Receive the midi event packets from the host:
+## Receive the midi event packets from the host
 Override the weak `USBD_MIDI_OnPacketsReceived` callback function *(which will be called during the USB interrupt routine)* with code similar to the following:
 ```C
 void USBD_MIDI_OnPacketsReceived(uint8_t *data, uint8_t len)
@@ -104,3 +104,7 @@ void USBD_MIDI_OnPacketsReceived(uint8_t *data, uint8_t len)
   }
 }
 ```
+## Interrupt callbacks and FreeRTOS
+* Do not call the `USBD_MIDI_SendPackets` function from the `USBD_MIDI_OnPacketsReceived` or `USBD_MIDI_OnPacketsSent` callback functions, as they are called during the USB interrupt routine.
+* In the case of the `FreeRTOS` - consider to use the `xQueueSendToBackFromISR` with the `xQueueReceive` functions, to pass the received MIDI data from the `USBD_MIDI_OnPacketsReceived` interrupt callback to the dedicated `task`. [documentation](https://github.com/FreeRTOS/FreeRTOS-Kernel-Book/blob/main/ch07.md)  
+Also use the `xTaskNotifyFromISR` with the `xTaskNotifyWait` functions, to notify the dedicated `task` from the `USBD_MIDI_OnPacketsSent` interrupt callback that the MIDI packets were sent to the host. [documentation](https://github.com/FreeRTOS/FreeRTOS-Kernel-Book/blob/main/ch10.md)
